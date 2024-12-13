@@ -1,14 +1,43 @@
-import { Button } from "@/components/ui/button";
+import { useEffect, useState } from 'react';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import LoginView from '../login-view/login-view';
+import SignupView from '../signup-view/signup-view';
+import Dashboard from '../dashboard/dashboard';
 
 const MainView = () => {
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const user = localStorage.getItem('user');
+    if (user) {
+      setUser(JSON.parse(user));
+    }
+  }, []);
+
   return (
-    <div className='bg-indigo-50 py-5 px-10'>
-      <h1>Yournal</h1>
-      <p>Yournal is a journaling app that allows you to write, save, and delete journal entries.
-        It is a simple and easy-to-use app that is perfect for anyone who wants to keep a journal.
-      </p>
-      <Button className="bg-purple-400">Get Started</Button>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={
+          <>
+            {user ? <Dashboard /> : (<Navigate to="/login" />)}
+          </>
+        }
+        />
+        <Route path="/login" element={
+          <>
+            {user ? (<Navigate to="/" />) : <LoginView />}
+          </>
+        }
+        />
+        <Route path="/signup" element={
+          <>
+            {user ? (<Navigate to="/" />) : <SignupView />}
+          </>
+        }
+        />
+
+      </Routes>
+    </BrowserRouter>
   );
 
 };
