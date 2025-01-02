@@ -1,4 +1,3 @@
-import Navigation from "../navigation/navigation-bar";
 import { useEffect, useState } from "react";
 
 const DailyAffirmation = () => {
@@ -23,7 +22,6 @@ const DailyAffirmation = () => {
 
   return (
     <>
-      <div>Your daily affirmation:</div>
       <div>{affirmation}.</div>
     </>
   );

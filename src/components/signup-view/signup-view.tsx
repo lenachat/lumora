@@ -29,8 +29,10 @@ const SignupView = () => {
 
   return (
     <>
-      <div><Navigation /></div>
-      <Card>
+      <div className="m-4">
+        <Navigation />
+      </div>
+      <Card className="m-4 w-6/12">
         <CardHeader>Signup</CardHeader>
         <CardContent>
           <form onSubmit={handleSignup}>
@@ -40,12 +42,14 @@ const SignupView = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
+            <br />
             <Input
               type="password"
               placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
+            <br />
             <Button type="submit">Sign Up</Button>
           </form>
         </CardContent>

@@ -31,7 +31,7 @@ const JournalEntryForm = () => {
           onChange={(e) => setJournalEntry(e.target.value)}
           placeholder="Write your journal entry here..."
           rows={5}
-          cols={40}
+          className="w-full p-2 resize-none md:resize-y md:h-32 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:outline-none"
         />
         <br />
         <Button type="submit">Save Entry</Button>

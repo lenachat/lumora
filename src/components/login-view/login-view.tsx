@@ -25,8 +25,10 @@ const LoginView = () => {
 
   return (
     <>
-      <div><Navigation /></div>
-      <Card>
+      <div className="m-4">
+        <Navigation />
+      </div>
+      <Card className="m-4 w-6/12">
         <CardHeader>Login</CardHeader>
         <CardContent>
           <form onSubmit={handleLogin}>
@@ -36,12 +38,14 @@ const LoginView = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
+            <br />
             <Input
               type="password"
               placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
+            <br />
             <Button type="submit">Login</Button>
           </form>
         </CardContent>
