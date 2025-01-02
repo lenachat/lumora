@@ -1,13 +1,14 @@
 import Navigation from "../navigation/navigation-bar";
 import JournalEntryForm from "../journal-entries/journal-entries";
+import DailyAffirmation from "../daily-affirmations/daily-affirmations";
 
 const Dashboard = () => {
 
   return (
     <>
-      <div><Navigation /></div>
-      <div>This is your Dashboard</div>
+      <Navigation />
       <JournalEntryForm />
+      <DailyAffirmation />
     </>
   );
 };
