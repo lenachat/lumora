@@ -4,6 +4,7 @@ import DailyAffirmation from "../daily-affirmations/daily-affirmations";
 import { Card } from "../ui/card";
 
 const Dashboard = () => {
+  const user = JSON.parse(localStorage.getItem('user') || '{}');
 
   return (
     <>
@@ -11,6 +12,7 @@ const Dashboard = () => {
         <Navigation />
       </div>
       <Card className="m-4">
+        <h1 className="p-4">Welcome {user.displayName}!</h1>
         <Card className="m-4 p-4">
           <DailyAffirmation />
         </Card>

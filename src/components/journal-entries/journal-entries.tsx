@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Button } from '../ui/button';
 import { db } from '@/firebase';
-import { collection, addDoc } from "firebase/firestore";
+import { doc, updateDoc, arrayUnion } from "firebase/firestore";
 
 const JournalEntryForm = () => {
   const [journalEntry, setJournalEntry] = useState<string>('');
@@ -9,15 +9,20 @@ const JournalEntryForm = () => {
 
   const handleSaveEntry = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log(journalEntry);
-    addDoc(collection(db, "journalEntries"), {
-      entry: journalEntry,
-      userId: user.uid,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    });
-  }
-
+    try {
+      const userDocRef = doc(db, "users", user.uid);
+      updateDoc(userDocRef, {
+        journalEntries: arrayUnion({
+          created: new Date(),
+          entry: journalEntry,
+          updated: new Date(),
+        }),
+      });
+      setJournalEntry('');
+    } catch (error) {
+      console.error("Error saving journal entry: ", error);
+    }
+  };
 
   return (
     <>
