@@ -3,22 +3,40 @@ import { Button } from '../ui/button';
 import { db } from '@/firebase';
 import { doc, updateDoc, arrayUnion } from "firebase/firestore";
 
-const JournalEntryForm = () => {
-  const [journalEntry, setJournalEntry] = useState<string>('');
-  const user = JSON.parse(localStorage.getItem('user') || '{}');
+interface User {
+  displayName: string;
+  uid: string;
+}
 
-  const handleSaveEntry = (e: React.FormEvent) => {
+interface JournalEntry {
+  entry: string;
+  created: Date;
+  updated: Date;
+}
+
+const JournalEntryForm = (
+  { user, journalEntries, setJournalEntries }:
+    {
+      user: User; journalEntries: JournalEntry[]; setJournalEntries: (journalEntries: JournalEntry[]) => void
+    }) => {
+  const [journalEntry, setJournalEntry] = useState<string>('');
+
+  const handleSaveEntry = async (e: React.FormEvent) => {
     e.preventDefault();
+    const newEntry = {
+      created: new Date(),
+      entry: journalEntry,
+      updated: new Date(),
+    };
     try {
       const userDocRef = doc(db, "users", user.uid);
-      updateDoc(userDocRef, {
-        journalEntries: arrayUnion({
-          created: new Date(),
-          entry: journalEntry,
-          updated: new Date(),
-        }),
+      await updateDoc(userDocRef, {
+        journalEntries: arrayUnion(newEntry),
       });
+      // Update the local state with the new entry
+      setJournalEntries([...journalEntries, newEntry]);
       setJournalEntry('');
+      alert("Journal entry saved!");
     } catch (error) {
       console.error("Error saving journal entry: ", error);
     }
@@ -27,7 +45,7 @@ const JournalEntryForm = () => {
   return (
     <>
       <div>
-        <h1>Journal Entry Form</h1>
+        <h1>Write a new Entry</h1>
       </div>
 
       <form onSubmit={handleSaveEntry}>

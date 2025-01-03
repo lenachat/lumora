@@ -19,7 +19,7 @@ const MainView = () => {
       <Routes>
         <Route path="/" element={
           <>
-            {user ? <Dashboard /> : (<Navigate to="/login" />)}
+            {user ? <Dashboard user={user} /> : (<Navigate to="/login" />)}
           </>
         }
         />
