@@ -5,6 +5,9 @@ import { Button } from "../ui/button";
 import Navigation from "../navigation/navigation-bar.tsx";
 import { Card, CardHeader, CardContent } from "../ui/card";
 import { Input } from "../ui/input";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "../../firebase";
+import { signOut } from "firebase/auth";
 
 const LoginView = () => {
   const [email, setEmail] = useState("");
@@ -15,11 +18,23 @@ const LoginView = () => {
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
-      console.log(user.email, "User logged in successfully");
-      localStorage.setItem('user', JSON.stringify(user));
-      window.location.reload();
+
+      //Check if user exists in Firestore
+      const userDocRef = doc(db, 'users', user.uid);
+      const userDoc = await getDoc(userDocRef);
+
+      if (!userDoc.exists()) {
+        await signOut(auth);
+        console.error('User not found in Firestore.');
+        alert('User does not exist. Please sign up.');
+        return;
+      } else {
+        console.log(user.email, "User logged in successfully");
+        localStorage.setItem('user', JSON.stringify(user));
+        window.location.reload();
+      }
     } catch (error) {
-      console.error(error);
+      console.error("Login failed: ", error);
     }
   }
 
