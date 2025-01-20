@@ -1,6 +1,7 @@
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { useState } from "react";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, getDocs, setDoc } from "firebase/firestore";
+import { collection, query, where } from "firebase/firestore";
 import { auth, db } from "../../firebase.ts";
 import Navigation from "../navigation/navigation-bar.tsx";
 import { Button } from "../ui/button";
@@ -14,25 +15,45 @@ const SignupView = () => {
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Check if required fields are filled
+    if (!email || !password || !username) {
+      alert("Please fill out all fields to sign up.");
+      return;
+    }
+
     try {
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      const user = userCredential.user;
-      // Update displayName in Firebase Authentication
-      await updateProfile(user, {
-        displayName: username, // Set the username
-      });
-      // Save a new user document in Firestore
-      await setDoc(doc(db, "users", user.uid), {
-        userId: user.uid,
-        username: user.displayName,
-        email: user.email,
-        createdAt: new Date(),
-        favoriteAffirmations: [],
-        journalEntries: [],
-      });
-      alert("User created successfully");
-    } catch (error) {
-      console.error(error);
+      // Check if email already exists in Firestore
+      const usersRef = collection(db, "users");
+      const querySnapshot = await getDocs(query(usersRef, where("email", "==", email)));
+
+      if (!querySnapshot.empty) {
+        alert("This email is already in use. Please login instead.");
+        return;
+      } else {
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+        // Update displayName in Firebase Authentication
+        await updateProfile(user, {
+          displayName: username, // Set the username
+        });
+        // Save a new user document in Firestore
+        await setDoc(doc(db, "users", user.uid), {
+          userId: user.uid,
+          username: user.displayName,
+          email: user.email,
+          createdAt: new Date(),
+          favoriteAffirmations: [],
+          journalEntries: [],
+        });
+        alert("User created successfully");
+        localStorage.setItem("user", JSON.stringify(user));
+        window.location.reload();
+      }
+    }
+    catch (error) {
+      console.error("Signup error: ", error);
+      alert("Signup failed. Please try again.");
     }
   }
 
