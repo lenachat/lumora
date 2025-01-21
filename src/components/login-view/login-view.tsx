@@ -5,9 +5,9 @@ import { Button } from "../ui/button";
 import Navigation from "../navigation/navigation-bar.tsx";
 import { Card, CardHeader, CardContent } from "../ui/card";
 import { Input } from "../ui/input";
-import { doc, getDoc } from "firebase/firestore";
 import { db } from "../../firebase";
-import { signOut } from "firebase/auth";
+import { collection, query, where, getDocs } from "firebase/firestore";
+import { FirebaseError } from "firebase/app";
 
 const LoginView = () => {
   const [email, setEmail] = useState("");
@@ -16,25 +16,28 @@ const LoginView = () => {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      const user = userCredential.user;
+      // Check if user exists in Firebase
+      const usersRef = collection(db, "users");
+      const q = query(usersRef, where("email", "==", email));
+      const querySnapshot = await getDocs(q);
 
-      //Check if user exists in Firestore
-      const userDocRef = doc(db, 'users', user.uid);
-      const userDoc = await getDoc(userDocRef);
-
-      if (!userDoc.exists()) {
-        await signOut(auth);
-        console.error('User not found in Firestore.');
-        alert('User does not exist. Please sign up.');
+      if (querySnapshot.empty) {
+        alert("No account found with this email. Please sign up.");
         return;
       } else {
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
         console.log(user.email, "User logged in successfully");
         localStorage.setItem('user', JSON.stringify(user));
         window.location.reload();
       }
-    } catch (error) {
+    } catch (error: unknown) {
       console.error("Login failed: ", error);
+      if ((error as FirebaseError).code === "auth/invalid-credential") {
+        alert("Incorrect password. Please try again.");
+      } else {
+        alert("Login failed. Please try again.");
+      }
     }
   }
 
