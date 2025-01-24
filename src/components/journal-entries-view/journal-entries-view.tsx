@@ -1,4 +1,7 @@
 import { Card } from '../ui/card';
+import { Button } from '../ui/button';
+import { Link } from 'react-router-dom';
+import './journal-entries-view.css';
 
 interface JournalEntries {
   entry: string;
@@ -6,20 +9,25 @@ interface JournalEntries {
   updated: Date;
 }
 
-const JournalEntriesView = ({ journalEntries }: { journalEntries: JournalEntries[] }) => {
+interface JournalEntriesList {
+  journalEntries: JournalEntries[];
+}
 
+const JournalEntriesView = ({ journalEntries }: JournalEntriesList) => {
   return (
     <>
-      <h2 className="p-2">Journal Entries</h2>
       <div>
-        {journalEntries.slice().reverse().map((entry, index) => (
+        {journalEntries.slice(-4).reverse().map((entry, index) => ( // Show only the last 4 entries
           <Card key={index} className="p-4">
-            <p><strong>Entry:</strong> {entry.entry}</p>
-            <p>Created At: {entry.created.toLocaleString()}</p>
-            <p>Last Updated: {entry.updated.toLocaleString()}</p>
+            <p className='line-clamp'><strong>Entry:</strong> {entry.entry}</p>
+            <p>Created At: {entry.created.toLocaleDateString()}, {entry.created.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
+            <p>Last Updated: {entry.created.toLocaleDateString()}, {entry.updated.toLocaleTimeString([],{ hour: '2-digit', minute: '2-digit' })}</p>
           </Card>
         ))}
       </div>
+      <Link to="/journalEntries">
+        <Button>See all entries</Button>
+      </Link>
     </>
   );
 
