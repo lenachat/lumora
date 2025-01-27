@@ -21,7 +21,7 @@ const JournalEntriesView = ({ journalEntries }: JournalEntriesList) => {
           <Card key={index} className="p-4">
             <p className='line-clamp'><strong>Entry:</strong> {entry.entry}</p>
             <p>Created At: {entry.created.toLocaleDateString()}, {entry.created.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
-            <p>Last Updated: {entry.created.toLocaleDateString()}, {entry.updated.toLocaleTimeString([],{ hour: '2-digit', minute: '2-digit' })}</p>
+            <p>Last Updated: {entry.updated.toLocaleDateString()}, {entry.updated.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
           </Card>
         ))}
       </div>

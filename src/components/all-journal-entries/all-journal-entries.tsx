@@ -17,17 +17,17 @@ const AllJournalEntries = ({ journalEntries }: JournalEntriesList) => {
     <>
       <h2 className="p-2">Your Journal Entries</h2>
       <div>
-        {journalEntries.slice().reverse().map((entry, index) => (
-          <>
+        {[...journalEntries].reverse().map((entry, index) => (
+          <div key={index}>
             <Link to={`/journalEntries/${index}`}>
-              <Card key={index} className="p-4">
+              <Card className="p-4">
                 <p className='line-clamp'><strong>Entry:</strong> {entry.entry}</p>
                 <p>Created At: {entry.created.toLocaleDateString()}, {entry.created.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
-            <p>Last Updated: {entry.created.toLocaleDateString()}, {entry.updated.toLocaleTimeString([],{ hour: '2-digit', minute: '2-digit' })}</p>
+                <p>Last Updated: {entry.updated.toLocaleDateString()}, {entry.updated.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
               </Card>
             </Link>
             <br />
-          </>
+          </div>
         ))}
       </div>
       <Link to="/">
