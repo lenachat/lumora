@@ -81,8 +81,8 @@ const MainView = () => {
         }
         />
         <Route path='/journalEntries' element={user ? <AllJournalEntries journalEntries={journalEntries} /> : <Navigate to="/login" />} />
-        <Route path='/journalEntries/:index' element={user ? <SingleJournalEntry user={user} journalEntries={journalEntries} setJournalEntries={setJournalEntries}/> : <Navigate to="/login" />} />
-        <Route path='/journalEntries/:index/edit' element={user ? <UpdateJournalEntry journalEntries={journalEntries} userId={user.uid} /> : <Navigate to="/login" />} />
+        <Route path='/journalEntries/:index' element={user ? <SingleJournalEntry user={user} journalEntries={journalEntries} setJournalEntries={setJournalEntries} /> : <Navigate to="/login" />} />
+        <Route path='/journalEntries/:index/edit' element={user ? <UpdateJournalEntry journalEntries={journalEntries} userId={user.uid} setJournalEntries={setJournalEntries} /> : <Navigate to="/login" />} />
       </Routes>
     </BrowserRouter>
   );

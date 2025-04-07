@@ -62,7 +62,7 @@ const SignupView = () => {
       <div className="m-4">
         <Navigation />
       </div>
-      <Card className="m-4 w-6/12">
+      <Card className="m-4 w-1/3 place-self-center">
         <CardHeader>Signup</CardHeader>
         <CardContent>
           <form onSubmit={handleSignup}>

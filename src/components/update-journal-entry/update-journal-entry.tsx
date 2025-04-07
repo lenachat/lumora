@@ -4,6 +4,10 @@ import { useParams } from "react-router-dom";
 import { db } from "@/firebase"; // Import your Firebase configuration
 import { doc, updateDoc } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
+import Navigation from "../navigation/navigation-bar";
+import { Button } from "../ui/button";
+import { Card } from "../ui/card";
+import { Link } from "react-router-dom";
 
 interface JournalEntry {
   entry: string;
@@ -14,9 +18,10 @@ interface JournalEntry {
 interface UpdateJournalEntryProps {
   journalEntries: JournalEntry[];
   userId: string;
+  setJournalEntries: (journalEntries: JournalEntry[]) => void;
 }
 
-const UpdateJournalEntry = ({ journalEntries, userId }: UpdateJournalEntryProps) => {
+const UpdateJournalEntry = ({ journalEntries, userId, setJournalEntries }: UpdateJournalEntryProps) => {
   const navigate = useNavigate();
   const { index } = useParams<{ index: string }>();  // Get the index from the URL
   const entryIndex = parseInt(index ?? "0", 10);
@@ -54,6 +59,8 @@ const UpdateJournalEntry = ({ journalEntries, userId }: UpdateJournalEntryProps)
 
       // Update the Firestore document
       await updateDoc(userDocRef, { journalEntries: updatedJournalEntries.reverse() });
+      // Update local state
+      setJournalEntries([...updatedJournalEntries]);
       alert("Journal entry updated successfully!");
       navigate(`/journalEntries/${reverseIndex}`);
     } catch (error) {
@@ -62,16 +69,29 @@ const UpdateJournalEntry = ({ journalEntries, userId }: UpdateJournalEntryProps)
   };
 
   return (
-    <div>
-      <h1>Update Journal Entry</h1>
-      <form onSubmit={handleUpdateEntry}>
-        <label htmlFor="entry">Entry:</label>
-        <textarea id="entry" name="entry" rows={4} cols={50} value={updatedEntry}
-          onChange={(e) => setUpdatedEntry(e.target.value)}></textarea>
-        <br />
-        <button type="submit">Update Entry</button>
-      </form>
-    </div>
+    <>
+      <div className="m-4 flex flex-row">
+        <h1 className="w-32 flex-1">Lumora</h1>
+        <div className="w-32 flex-1 place-items-end">
+          <Navigation />
+        </div>
+      </div>
+      <Link to={`/journalEntries/${index}`}>
+        <Button className='m-4 p-4 float-start'>
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><g data-name="16. Previous" id="_16._Previous"><path d="M12,0A12,12,0,1,0,24,12,12.013,12.013,0,0,0,12,0Zm0,22A10,10,0,1,1,22,12,10.011,10.011,0,0,1,12,22Z" /><path d="M14.768,6.36a1,1,0,0,0-1.408-.128l-6,5a1,1,0,0,0,0,1.536l6,5a1,1,0,1,0,1.28-1.536L9.562,12,14.64,7.768A1,1,0,0,0,14.768,6.36Z" /></g></svg>
+        </Button>
+      </Link>
+      <Card className="p-4 w-1/2 place-self-center">
+        <h1 className='p-4'>Update your entry here:</h1>
+        <form onSubmit={handleUpdateEntry} className="p-4">
+          <label htmlFor="entry"></label>
+          <textarea id="entry" name="entry" rows={10} cols={50} value={updatedEntry}
+            onChange={(e) => setUpdatedEntry(e.target.value)}></textarea>
+          <br />
+          <Button type="submit">Save Changes</Button>
+        </form>
+      </Card>
+    </>
   );
 
 };

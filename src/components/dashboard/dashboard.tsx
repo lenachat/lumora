@@ -3,6 +3,8 @@ import JournalEntryForm from "../journal-entry-form/journal-entry-form";
 import DailyAffirmation from "../daily-affirmations/daily-affirmations";
 import JournalEntriesView from "../journal-entries-view/journal-entries-view";
 import { Card } from "../ui/card";
+import "./dashboard.css";
+import { Link } from "react-router-dom";
 
 interface User {
   displayName: string;
@@ -23,21 +25,29 @@ interface DashboardProps {
 const Dashboard = ({ user, journalEntries, setJournalEntries }: DashboardProps) => {
   return (
     <>
-      <div className="m-4">
-        <Navigation />
+      <div className="p-4 flex flex-row">
+        <h1 className="w-32 flex-1">Lumora</h1>
+        <div className="w-32 flex-1 place-items-end">
+          <Navigation />
+        </div>
       </div>
+      <h1 className="p-4 place-self-center underline">Good to have you, {user.displayName}!</h1>
       <Card className="m-4">
-        <h1 className="p-4">Welcome {user.displayName}!</h1>
-        <Card className="m-4 p-4">
+        <Card className="m-4 p-4 place-items-center">
+          <h2 className="m-2 font-thin" >Your Affirmation of the Day</h2>
           <DailyAffirmation />
         </Card>
-        <Card className="m-4 p-4 w-5/12">
-          <JournalEntryForm user={user} journalEntries={journalEntries}
-            setJournalEntries={setJournalEntries} />
-        </Card>
-        <Card className="m-4 p-4 w-5/12">
-          <JournalEntriesView journalEntries={journalEntries} />
-        </Card>
+        <div className="flex flex-row">
+          <Card className="m-4 p-4 basis-1/2">
+            <JournalEntryForm user={user} journalEntries={journalEntries}
+              setJournalEntries={setJournalEntries} />
+          </Card>
+          <Card className="m-4 p-4 basis-1/2">
+            <Link to="/journalEntries">
+              <JournalEntriesView journalEntries={journalEntries} />
+            </Link>
+          </Card>
+        </div>
       </Card>
     </>
   );

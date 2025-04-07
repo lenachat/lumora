@@ -3,11 +3,12 @@ import {
   NavigationMenuItem,
   NavigationMenuList,
 } from "@/components/ui/navigation-menu";
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { Button } from "../ui/button";
 
 const Navigation = () => {
   const user = localStorage.getItem('user');
+  const location = useLocation();
 
   const handleLogout = () => {
     localStorage.removeItem('user');
@@ -19,16 +20,20 @@ const Navigation = () => {
       <NavigationMenuList>
         {!user ? (
           <>
-            <NavigationMenuItem>
-              <Link to="/login">
-                <Button>Login</Button>
-              </Link>
-            </NavigationMenuItem>
-            <NavigationMenuItem>
-              <Link to="/signup">
-                <Button>Signup</Button>
-              </Link>
-            </NavigationMenuItem>
+            {location.pathname === '/signup' ? (
+              <NavigationMenuItem>
+                <Link to="/login">
+                  <Button>Login</Button>
+                </Link>
+              </NavigationMenuItem>
+            ) : (
+              <NavigationMenuItem>
+                <Link to="/signup">
+                  <Button>Signup</Button>
+                </Link>
+              </NavigationMenuItem>
+            )
+            }
           </>
         ) : (
           <NavigationMenuItem>
