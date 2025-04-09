@@ -29,20 +29,22 @@ const AllJournalEntries = ({ journalEntries }: JournalEntriesList) => {
       </Link>
       <h2 className="p-2 place-self-center">Your past entries</h2>
       <div>
-        {[...journalEntries].reverse().map((entry, index) => (
-          <div key={index}>
-            <Link to={`/journalEntries/${index}`}>
-              <Card className="p-4 w-1/2 place-self-center transition-transform duration-300 ease-in-out transform hover:scale-x-105 hover:shadow-md">
-                <div className="flex flex-row">
-                  <p className='w-32 flex-1 font-thin'>{entry.created.toLocaleDateString()}, {entry.created.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
-                  <p className='w-32 flex-1 place-items-end font-thin'>Last Updated: {entry.updated.toLocaleDateString()}, {entry.updated.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
-                </div>
-                <p className='line-clamp'>{entry.entry}</p>
-              </Card>
-            </Link>
-            <br />
-          </div>
-        ))}
+        {[...journalEntries]
+          .sort((a, b) => new Date(b.created).getTime() - new Date(a.created).getTime()) // Sort by created date in descending order
+          .map((entry, index) => (
+            <div key={index}>
+              <Link to={`/journalEntries/${index}`}>
+                <Card className="p-4 w-1/2 place-self-center transition-transform duration-300 ease-in-out transform hover:scale-x-105 hover:shadow-md">
+                  <div className="flex flex-row">
+                    <p className='w-32 flex-1 font-thin'>{entry.created.toLocaleDateString()}, {entry.created.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
+                    <p className='w-32 flex-1 place-items-end font-thin'>Last Updated: {entry.updated.toLocaleDateString()}, {entry.updated.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
+                  </div>
+                  <p className='line-clamp'>{entry.entry}</p>
+                </Card>
+              </Link>
+              <br />
+            </div>
+          ))}
       </div>
 
     </>

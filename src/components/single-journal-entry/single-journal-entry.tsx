@@ -28,9 +28,8 @@ const SingleJournalEntry = ({ user, journalEntries, setJournalEntries }: SingleJ
   const { index } = useParams<{ index: string }>();
   const entryIndex = parseInt(index ?? "0", 10);
 
-  const reverseIndex = journalEntries.length - 1 - entryIndex;
-
-  const entry = journalEntries[reverseIndex];
+  const sortedEntries = [...journalEntries].sort((a, b) => new Date(b.created).getTime() - new Date(a.created).getTime());
+  const entry = sortedEntries[entryIndex];
 
   if (!entry) {
     return <p>Journal entry not found.</p>;
@@ -39,14 +38,14 @@ const SingleJournalEntry = ({ user, journalEntries, setJournalEntries }: SingleJ
   const handleDeleteEntry = async () => {
     // Filter out the selected journal entry
     const updatedJournalEntries = [...journalEntries]
-    updatedJournalEntries.splice(reverseIndex, 1); // Remove the entry at the reverse index
+    updatedJournalEntries.splice(entryIndex, 1);
 
     // Get the Firestore document reference
     const userDocRef = doc(db, 'users', user.uid);
 
     try {
-      // Update the Firestore document
-      await updateDoc(userDocRef, { journalEntries: updatedJournalEntries.reverse() });
+      // Update the Firestore document // Sort by created date in descending order
+      await updateDoc(userDocRef, { journalEntries: updatedJournalEntries.sort((a, b) => new Date(b.created).getTime() - new Date(a.created).getTime()) });
       alert("Journal entry deleted successfully!");
       navigate(`/journalEntries`);
       setJournalEntries(updatedJournalEntries); // Update the local state

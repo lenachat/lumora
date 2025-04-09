@@ -26,11 +26,8 @@ const UpdateJournalEntry = ({ journalEntries, userId, setJournalEntries }: Updat
   const { index } = useParams<{ index: string }>();  // Get the index from the URL
   const entryIndex = parseInt(index ?? "0", 10);
 
-  // Reverse the index to get the correct entry (reversed UI order)
-  const reverseIndex = journalEntries.length - 1 - entryIndex;
-
-  // Find the journal entry based on the reversed index
-  const entryToEdit = journalEntries[reverseIndex];
+  const sortedEntries = [...journalEntries].sort((a, b) => new Date(b.created).getTime() - new Date(a.created).getTime());
+  const entryToEdit = sortedEntries[entryIndex];
   const [updatedEntry, setUpdatedEntry] = useState<string>(entryToEdit?.entry || '');
 
   useEffect(() => {
@@ -53,16 +50,16 @@ const UpdateJournalEntry = ({ journalEntries, userId, setJournalEntries }: Updat
     const userDocRef = doc(db, "users", userId);
 
     try {
-      const updatedJournalEntries = journalEntries.reverse().map((entry, idx) =>
+      const updatedJournalEntries = journalEntries.map((entry, idx) =>
         idx === entryIndex ? updatedEntryData : entry
       );
 
-      // Update the Firestore document
-      await updateDoc(userDocRef, { journalEntries: updatedJournalEntries.reverse() });
+      // Update the Firestore document // Sort by created date in descending order
+      await updateDoc(userDocRef, { journalEntries: updatedJournalEntries.sort((a, b) => new Date(b.created).getTime() - new Date(a.created).getTime()) });
       // Update local state
       setJournalEntries([...updatedJournalEntries]);
       alert("Journal entry updated successfully!");
-      navigate(`/journalEntries/${reverseIndex}`);
+      navigate(`/journalEntries/${entryIndex}`);
     } catch (error) {
       console.error("Error updating journal entry:", error);
     }
