@@ -2,6 +2,7 @@ import Navigation from "../navigation/navigation-bar";
 import JournalEntryForm from "../journal-entry-form/journal-entry-form";
 import DailyAffirmation from "../daily-affirmations/daily-affirmations";
 import JournalEntriesView from "../journal-entries-view/journal-entries-view";
+import JournalStreak from "../streak/streak";
 import { Card } from "../ui/card";
 import "./dashboard.css";
 import { Link } from "react-router-dom";
@@ -20,9 +21,12 @@ interface DashboardProps {
   user: User;
   journalEntries: JournalEntry[];
   setJournalEntries: (journalEntries: JournalEntry[]) => void;
+  streak: number;
+  calculateStreak: (dates: Date[]) => number;
+  setStreak: (streak: number) => void;
 }
 
-const Dashboard = ({ user, journalEntries, setJournalEntries }: DashboardProps) => {
+const Dashboard = ({ user, journalEntries, setJournalEntries, streak, calculateStreak, setStreak }: DashboardProps) => {
   return (
     <>
       <div className="p-4 flex flex-row">
@@ -39,13 +43,20 @@ const Dashboard = ({ user, journalEntries, setJournalEntries }: DashboardProps) 
         </Card>
         <div className="flex flex-row">
           <Card className="m-4 p-4 basis-1/2">
-            <JournalEntryForm user={user} journalEntries={journalEntries}
-              setJournalEntries={setJournalEntries} />
+            <JournalEntryForm
+              user={user}
+              journalEntries={journalEntries}
+              setJournalEntries={setJournalEntries}
+              setStreak={setStreak}
+              calculateStreak={calculateStreak} />
           </Card>
           <Card className="m-4 p-4 basis-1/2">
             <Link to="/journalEntries">
               <JournalEntriesView journalEntries={journalEntries} />
             </Link>
+          </Card>
+          <Card className="m-4 p-4 basis-1/2">
+            <JournalStreak streak={streak} />
           </Card>
         </div>
       </Card>

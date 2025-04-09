@@ -14,11 +14,17 @@ interface JournalEntry {
   updated: Date;
 }
 
+interface JournalEntryFormProps {
+  user: User;
+  journalEntries: JournalEntry[];
+  setJournalEntries: (entries: JournalEntry[]) => void;
+  setStreak: (streak: number) => void;
+  calculateStreak: (dates: Date[]) => number;
+}
+
 const JournalEntryForm = (
-  { user, journalEntries, setJournalEntries }:
-    {
-      user: User; journalEntries: JournalEntry[]; setJournalEntries: (journalEntries: JournalEntry[]) => void
-    }) => {
+  { user, journalEntries, setJournalEntries, setStreak, calculateStreak }: JournalEntryFormProps) => {
+
   const [journalEntry, setJournalEntry] = useState<string>('');
 
   const handleSaveEntry = async (e: React.FormEvent) => {
@@ -34,9 +40,14 @@ const JournalEntryForm = (
         journalEntries: arrayUnion(newEntry),
       });
       // Update the local state with the new entry
-      setJournalEntries([...journalEntries, newEntry]);
+      const updatedEntries = [...journalEntries, newEntry];
+      setJournalEntries(updatedEntries);
       setJournalEntry('');
-      alert("Journal entry saved!");
+      // Update the streak count
+      const createdDates = updatedEntries.map(entry => new Date(entry.created));
+      const streakCount = calculateStreak(createdDates);
+      setStreak(streakCount); // update the state from parent
+      alert("Journal entry saved successfully!");
     } catch (error) {
       console.error("Error saving journal entry: ", error);
     }
