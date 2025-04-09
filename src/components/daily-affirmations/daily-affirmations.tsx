@@ -1,13 +1,38 @@
 import { useEffect, useState } from "react";
 import { db } from "../../firebase";
-import { doc, updateDoc, arrayUnion, getDoc } from "firebase/firestore";
+import { doc, updateDoc, arrayUnion, arrayRemove, getDoc } from "firebase/firestore";
 import { v4 as uuidv4 } from "uuid"; // for generating random ids
 
 const DailyAffirmation = () => {
   const [affirmation, setAffirmation] = useState<string>("");
+  const [isFavorite, setIsFavorite] = useState<boolean>(false);
 
   const userData = localStorage.getItem("user");
   const userId = userData ? JSON.parse(userData).uid : null;
+
+  useEffect(() => {
+    const fetchFavoritesFromFirestore = async () => {
+      const user = JSON.parse(localStorage.getItem("user") || "{}");
+      const userId = user?.uid;
+      if (!userId) return;
+
+      try {
+        const userDocRef = doc(db, "users", userId);
+        const userSnap = await getDoc(userDocRef);
+
+        if (userSnap.exists()) {
+          const data = userSnap.data();
+          const favorites = data.favoriteAffirmations || [];
+
+          localStorage.setItem("favoriteAffirmations", JSON.stringify(favorites));
+        }
+      } catch (error) {
+        console.error("Error syncing favorites from Firestore:", error);
+      }
+    };
+
+    fetchFavoritesFromFirestore();
+  }, []);
 
   useEffect(() => {
     const today = new Date().toISOString().split("T")[0]; // format: YYYY-MM-DD
@@ -38,47 +63,64 @@ const DailyAffirmation = () => {
     }
   }, []);
 
-  const saveToFavorites = async () => {
+  useEffect(() => {
+    if (!affirmation || !userId) return;
 
-    if (affirmation && userId) {
-      try {
-        const userDocRef = doc(db, "users", userId);
-        const userDoc = await getDoc(userDocRef);
+    const favorites = JSON.parse(localStorage.getItem("favoriteAffirmations") || "[]");
+    const match = favorites.find((fav: { affirmation: string }) => fav.affirmation === affirmation);
 
-        if (userDoc.exists()) {
-          const favorites = userDoc.data().favoriteAffirmations || [];
+    if (match) {
+      setIsFavorite(true);
+    } else {
+      setIsFavorite(false);
+    }
+  }, [affirmation, userId]);
 
-          // Check if affirmation already exists (by text)
-          const alreadyExists = favorites.some(
-            (fav: { affirmation: string }) => fav.affirmation === affirmation
-          );
-          if (alreadyExists) {
-            alert("Affirmation already in favorites!");
-            return;
-          }
-          const newAffirmation = {
-            id: uuidv4(),
-            affirmation,
-          };
 
+  const toggleFavorite = async () => {
+    if (!affirmation || !userId) return;
+
+    const userDocRef = doc(db, "users", userId);
+    const storedFavorites = JSON.parse(localStorage.getItem("favoriteAffirmations") || "[]");
+
+    try {
+      if (isFavorite) {
+        const toRemove = storedFavorites.find(
+          (fav: { affirmation: string }) => fav.affirmation === affirmation
+        );
+        if (toRemove) {
           await updateDoc(userDocRef, {
-            favoriteAffirmations: arrayUnion(newAffirmation),
+            favoriteAffirmations: arrayRemove(toRemove),
           });
-          alert("Affirmation added to favorites!");
+
+          const updatedFavorites = storedFavorites.filter(
+            (fav: { affirmation: string }) => fav.affirmation !== affirmation
+          );
+          localStorage.setItem("favoriteAffirmations", JSON.stringify(updatedFavorites));
+
+          setIsFavorite(false);
         }
-      } catch (error) {
-        console.error("Error saving favorite affirmation:", error);
+      } else {
+        const newFav = { id: uuidv4(), affirmation };
+        await updateDoc(userDocRef, {
+          favoriteAffirmations: arrayUnion(newFav),
+        });
+
+        storedFavorites.push(newFav);
+        localStorage.setItem("favoriteAffirmations", JSON.stringify(storedFavorites));
+
+        setIsFavorite(true);
       }
+    } catch (error) {
+      console.error("Error toggling favorite:", error);
     }
   };
-
 
   return (
     <>
       <div>{affirmation}.</div>
-      <button onClick={saveToFavorites} style={{ fontSize: "1.5rem", background: "none", border: "none", cursor: "pointer" }}>
-        {/* {isFavorite ? "⭐" : "☆"} */}
-        click me
+      <button onClick={toggleFavorite} style={{ fontSize: "1.5rem", background: "none", border: "none", cursor: "pointer" }}>
+        {isFavorite ? "⭐" : "☆"}
       </button>
     </>
   );
