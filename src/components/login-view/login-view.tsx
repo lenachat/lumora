@@ -27,8 +27,13 @@ const LoginView = () => {
       } else {
         const userCredential = await signInWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
-        console.log(user.email, "User logged in successfully");
+
         localStorage.setItem('user', JSON.stringify(user));
+        // Fetch favorite affirmations from Firestore
+        const userDoc = querySnapshot.docs[0];
+        const userData = userDoc.data();
+        const favorites = userData.favoriteAffirmations || [];
+        localStorage.setItem("favoriteAffirmations", JSON.stringify(favorites));
         window.location.reload();
       }
     } catch (error: unknown) {

@@ -12,6 +12,7 @@ const Navigation = () => {
 
   const handleLogout = () => {
     localStorage.removeItem('user');
+    localStorage.removeItem('favoriteAffirmations');
     window.location.reload();
   }
 
