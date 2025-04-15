@@ -1,4 +1,4 @@
-import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { createUserWithEmailAndPassword, updateProfile, sendEmailVerification } from "firebase/auth";
 import { useState } from "react";
 import { doc, getDocs, setDoc } from "firebase/firestore";
 import { collection, query, where } from "firebase/firestore";
@@ -46,7 +46,12 @@ const SignupView = () => {
           favoriteAffirmations: [],
           journalEntries: [],
         });
-        alert("User created successfully");
+        // Send email verification
+        if (user && !user.emailVerified) {
+          await sendEmailVerification(user);
+          alert("Verification email sent! Please check your inbox before proceeding.");
+        }
+        //alert("User created successfully");
         localStorage.setItem("user", JSON.stringify(user));
         window.location.reload();
       }

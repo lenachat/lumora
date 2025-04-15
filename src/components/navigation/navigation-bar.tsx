@@ -41,6 +41,9 @@ const Navigation = () => {
             <Button onClick={handleLogout}>
               Logout
             </Button>
+            <Link to="/profile">
+              <Button>Profile</Button>
+            </Link>
           </NavigationMenuItem>
         )}
       </NavigationMenuList>
