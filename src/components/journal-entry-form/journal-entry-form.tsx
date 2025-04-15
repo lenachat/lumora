@@ -9,6 +9,7 @@ interface User {
 }
 
 interface JournalEntry {
+  title: string;
   entry: string;
   created: Date;
   updated: Date;
@@ -25,11 +26,13 @@ interface JournalEntryFormProps {
 const JournalEntryForm = (
   { user, journalEntries, setJournalEntries, setStreak, calculateStreak }: JournalEntryFormProps) => {
 
+  const [journalTitle, setJournalTitle] = useState<string>('');
   const [journalEntry, setJournalEntry] = useState<string>('');
 
   const handleSaveEntry = async (e: React.FormEvent) => {
     e.preventDefault();
     const newEntry = {
+      title: journalTitle,
       created: new Date(),
       entry: journalEntry,
       updated: new Date(),
@@ -60,6 +63,18 @@ const JournalEntryForm = (
       </div>
 
       <form onSubmit={handleSaveEntry}>
+        <label htmlFor="journalTitle" className="block text-sm font-medium text-gray-700">
+          Title
+        </label>
+        <input
+          type="text"
+          id="journalTitle"
+          value={journalTitle}
+          onChange={(e) => setJournalTitle(e.target.value)}
+          placeholder="Enter a title for your journal entry"
+          className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+        />
+        <br />
         <textarea
           value={journalEntry}
           onChange={(e) => setJournalEntry(e.target.value)}

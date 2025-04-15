@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import Navigation from '../navigation/navigation-bar';
 
 interface JournalEntries {
+  title: string;
   entry: string;
   created: Date;
   updated: Date;
@@ -39,6 +40,7 @@ const AllJournalEntries = ({ journalEntries }: JournalEntriesList) => {
                     <p className='w-32 flex-1 font-thin'>{entry.created.toLocaleDateString()}, {entry.created.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
                     <p className='w-32 flex-1 place-items-end font-thin'>Last Updated: {entry.updated.toLocaleDateString()}, {entry.updated.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
                   </div>
+                  <h3>{entry.title}</h3>
                   <p className='line-clamp'>{entry.entry}</p>
                 </Card>
               </Link>

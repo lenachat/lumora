@@ -10,6 +10,7 @@ import { Card } from "../ui/card";
 import { Link } from "react-router-dom";
 
 interface JournalEntry {
+  title: string;
   entry: string;
   created: Date;
   updated: Date;
@@ -28,12 +29,15 @@ const UpdateJournalEntry = ({ journalEntries, userId, setJournalEntries }: Updat
 
   const sortedEntries = [...journalEntries].sort((a, b) => new Date(b.created).getTime() - new Date(a.created).getTime());
   const entryToEdit = sortedEntries[entryIndex];
+
+  const [updatedTitle, setUpdatedTitle] = useState<string>(entryToEdit?.title || '');
   const [updatedEntry, setUpdatedEntry] = useState<string>(entryToEdit?.entry || '');
 
   useEffect(() => {
     // When the entry changes, update the state with the selected entry
     if (entryToEdit) {
       setUpdatedEntry(entryToEdit.entry);
+      setUpdatedTitle(entryToEdit.title);
     }
   }, [entryToEdit]);
 
@@ -43,6 +47,7 @@ const UpdateJournalEntry = ({ journalEntries, userId, setJournalEntries }: Updat
     // Update the 'last updated' timestamp
     const updatedEntryData = {
       ...entryToEdit,
+      title: updatedTitle,
       entry: updatedEntry,
       updated: new Date(),
     };
@@ -81,6 +86,16 @@ const UpdateJournalEntry = ({ journalEntries, userId, setJournalEntries }: Updat
       <Card className="p-4 w-1/2 place-self-center">
         <h1 className='p-4'>Update your entry here:</h1>
         <form onSubmit={handleUpdateEntry} className="p-4">
+          <label htmlFor="title"></label>
+          <input
+            id="title"
+            name="title"
+            type="text"
+            value={updatedTitle}
+            onChange={(e) => setUpdatedTitle(e.target.value)}
+            className="w-full p-2 border border-gray-300 rounded"
+            required
+          />
           <label htmlFor="entry"></label>
           <textarea id="entry" name="entry" rows={10} cols={50} value={updatedEntry}
             onChange={(e) => setUpdatedEntry(e.target.value)}></textarea>

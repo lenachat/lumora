@@ -12,6 +12,7 @@ interface User {
 }
 
 interface JournalEntry {
+  title: string;
   entry: string;
   created: Date;
   updated: Date;
@@ -73,6 +74,7 @@ const SingleJournalEntry = ({ user, journalEntries, setJournalEntries }: SingleJ
           <p className='w-32 flex-1 font-thin'>{entry.created.toLocaleDateString()}, {entry.created.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
           <p className='w-32 flex-1 place-items-end font-thin'>Last Updated: {entry.updated.toLocaleDateString()}, {entry.updated.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
         </div>
+        <h3>{entry.title}</h3>
         <p>{entry.entry}</p>
         <div className="flex flex-row">
           <Link to={`/journalEntries/${index}/edit`} className="w-32 flex-1">
