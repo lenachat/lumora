@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader } from "../ui/card";
 import { Input } from "../ui/input";
 import { useState, useEffect } from "react";
 import { getAuth, verifyBeforeUpdateEmail, updatePassword, updateProfile, EmailAuthProvider, reauthenticateWithCredential } from "firebase/auth";
-import { getFirestore, doc, updateDoc } from "firebase/firestore";
+import { getFirestore, doc, updateDoc, deleteDoc } from "firebase/firestore";
 
 
 const ProfileView = () => {
@@ -16,6 +16,7 @@ const ProfileView = () => {
   const [email, setEmail] = useState(user?.email || "");
   const [newPassword, setNewPassword] = useState("");
   const [currentPassword, setCurrentPassword] = useState("");
+  const [emailVerified] = useState(user?.emailVerified || false);
 
   useEffect(() => {
     if (user) {
@@ -83,6 +84,44 @@ const ProfileView = () => {
     }
   }
 
+  const deleteAccount = async () => {
+    if (!user) return;
+
+    const confirmed = window.confirm(
+      "Are you sure you want to delete your account? This action cannot be undone."
+    );
+
+    if (!confirmed) return;
+
+    try {
+      // Reauthenticate the user
+      const credential = EmailAuthProvider.credential(user.email || "", currentPassword);
+      await reauthenticateWithCredential(user, credential);
+
+      // Delete user data from Firestore
+      const db = getFirestore();
+      const userDocRef = doc(db, "users", user.uid);
+      await deleteDoc(userDocRef);
+
+      // Delete user from Firebase Auth
+      await user.delete();
+
+      alert("Your account has been deleted successfully.");
+      localStorage.removeItem("user");
+      localStorage.removeItem("favoriteAffirmations");
+      // Redirect to login or home page
+      window.location.href = "/"; // Or redirect to login/start page
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error("Error deleting account:", error);
+        alert("Error deleting account: " + error.message);
+      } else {
+        alert("An unknown error occurred.");
+      }
+    }
+  };
+
+
   return (
     <>
       <div className="p-4 flex flex-row">
@@ -93,6 +132,13 @@ const ProfileView = () => {
       </div>
       <Card className="m-4 p-4">
         <CardHeader>User Information</CardHeader>
+        <CardContent>
+          <p><strong>Username:</strong> {user?.displayName}</p>
+          <p><strong>Email:</strong> {user?.email}</p>
+          <p>Email verified? {emailVerified ? "Yes" : "Email not verified. Please check your inbox."} </p>
+        </CardContent>
+
+        <CardHeader>Update Profile</CardHeader>
         <CardContent>
           <form onSubmit={saveUserData} className="w-1/3">
             <p>Username:</p>
@@ -130,6 +176,22 @@ const ProfileView = () => {
             )}
             <Button type="submit">Save Changes</Button>
           </form>
+
+          <div className="mt-8">
+            <h2>Delete Account</h2>
+            <p>This action can not be reversed.</p>
+            <Input
+              id="delete-password"
+              type="password"
+              value={currentPassword}
+              onChange={(e) => setCurrentPassword(e.target.value)}
+              placeholder="Enter your password to delete account"
+              required
+            />
+            <Button onClick={deleteAccount}>
+              Delete My Account
+            </Button>
+          </div>
         </CardContent>
       </Card>
     </>
