@@ -6,7 +6,14 @@ interface JournalStreakProps {
 
 const JournalStreak = ({ streak }: JournalStreakProps) => {
 
-  return <div>🔥 Streak: {streak} day{streak !== 1 ? "s" : ""}</div>;
+  return (
+    <div>
+      <img src="../../../files/fire-icon.png" alt="" className="w-24 h-auto place-self-center mt-4" />
+      <p className="text-center ">
+        Streak: {streak} day{streak !== 1 ? "s" : ""}
+      </p>
+    </div>
+  );
 };
 
 export default JournalStreak;

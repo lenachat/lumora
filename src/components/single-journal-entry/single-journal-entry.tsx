@@ -57,32 +57,40 @@ const SingleJournalEntry = ({ user, journalEntries, setJournalEntries }: SingleJ
 
   return (
     <>
-      <div className="m-4 flex flex-row">
-        <h1 className="w-32 flex-1">Lumora</h1>
-        <div className="w-32 flex-1 place-items-end">
-          <Navigation />
+      <div className="flex flex-col ml-8 mr-8">
+        <Navigation />
+
+        <h2 className="p-2 place-self-center">Single journal entry</h2>
+        <div>
+          <Link to="/journalEntries">
+            <Button className='m-4 p-4 float-start'>
+              <img src="/../../../files/back.svg" alt="" className="w-8 h-8" />
+            </Button>
+          </Link>
+          <Card className="p-4 mb-6 mt-4 w-1/2 place-self-center border-none">
+            <div className="flex justify-between">
+              <p className='text-left text-light text-sm font-thin ml-3 mr-3'>
+                {entry.created.toLocaleDateString()}
+              </p>
+              <p className='text-right text-light text-sm font-thin ml-3 mr-3'>
+                Last Updated: {entry.updated.toLocaleDateString()}
+              </p>
+            </div>
+            <h3 className='text-xl mt-1 mb-2 ml-3 mr-3'>{entry.title}</h3>
+            <p className='ml-3 mr-3 mb-2'>{entry.entry}</p>
+            <div className="flex flex-row ml-3 mr-3 justify-between">
+              <Button >
+                <Link to={`/journalEntries/${index}/edit`}>
+                  Edit
+                </Link>
+              </Button>
+              <Button onClick={handleDeleteEntry} >
+                Delete
+              </Button>
+            </div>
+          </Card>
         </div>
       </div>
-      <Link to="/journalEntries">
-        <Button className='m-4 p-4 float-start'>
-          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><g data-name="16. Previous" id="_16._Previous"><path d="M12,0A12,12,0,1,0,24,12,12.013,12.013,0,0,0,12,0Zm0,22A10,10,0,1,1,22,12,10.011,10.011,0,0,1,12,22Z" /><path d="M14.768,6.36a1,1,0,0,0-1.408-.128l-6,5a1,1,0,0,0,0,1.536l6,5a1,1,0,1,0,1.28-1.536L9.562,12,14.64,7.768A1,1,0,0,0,14.768,6.36Z" /></g></svg>
-        </Button>
-      </Link>
-      <Card className="p-4 w-1/2 place-self-center">
-        <h2 className="p-2 place-self-center">Single yournal entry</h2>
-        <div className="flex flex-row">
-          <p className='w-32 flex-1 font-thin'>{entry.created.toLocaleDateString()}, {entry.created.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
-          <p className='w-32 flex-1 place-items-end font-thin'>Last Updated: {entry.updated.toLocaleDateString()}, {entry.updated.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
-        </div>
-        <h3>{entry.title}</h3>
-        <p>{entry.entry}</p>
-        <div className="flex flex-row">
-          <Link to={`/journalEntries/${index}/edit`} className="w-32 flex-1">
-            <Button>Edit</Button>
-          </Link>
-          <Button onClick={handleDeleteEntry} className='w-16 flex'>Delete</Button>
-        </div>
-      </Card>
     </>
   );
 }

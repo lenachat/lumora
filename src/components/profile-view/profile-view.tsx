@@ -2,6 +2,7 @@ import Navigation from "../navigation/navigation-bar";
 import { Button } from "../ui/button";
 import { Card, CardContent, CardHeader } from "../ui/card";
 import { Input } from "../ui/input";
+import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { getAuth, verifyBeforeUpdateEmail, updatePassword, updateProfile, EmailAuthProvider, reauthenticateWithCredential } from "firebase/auth";
 import { getFirestore, doc, updateDoc, deleteDoc } from "firebase/firestore";
@@ -124,76 +125,81 @@ const ProfileView = () => {
 
   return (
     <>
-      <div className="p-4 flex flex-row">
-        <h1 className="w-32 flex-1">Lumora</h1>
-        <div className="w-32 flex-1 place-items-end">
-          <Navigation />
-        </div>
-      </div>
-      <Card className="m-4 p-4">
-        <CardHeader>User Information</CardHeader>
-        <CardContent>
-          <p><strong>Username:</strong> {user?.displayName}</p>
-          <p><strong>Email:</strong> {user?.email}</p>
-          <p>Email verified? {emailVerified ? "Yes" : "Email not verified. Please check your inbox."} </p>
-        </CardContent>
+      <div className="flex flex-col ml-8 mr-8">
+        <Navigation />
+        <h2 className="p-2 place-self-center">Your Profile</h2>
+        <div>
+          <Link to="/">
+            <Button className='m-4 p-4 float-start'>
+              <img src="/../../../files/back.svg" alt="" className="w-8 h-8" />
+            </Button>
+          </Link>
+          <Card className="p-4 mb-6 mt-4 w-2/3 place-self-center border-none">
+            <CardHeader>User Information</CardHeader>
+            <CardContent>
+              <p><strong>Username:</strong> {user?.displayName}</p>
+              <p><strong>Email:</strong> {user?.email}</p>
+              <p>Email verified? {emailVerified ? "Yes" : "Email not verified. Please check your inbox."} </p>
+            </CardContent>
 
-        <CardHeader>Update Profile</CardHeader>
-        <CardContent>
-          <form onSubmit={saveUserData} className="w-1/3">
-            <p>Username:</p>
-            <Input
-              type="text"
-              value={displayName}
-              onChange={(e) => setDisplayName(e.target.value)}
-            />
-            <br />
-            <p>Email:</p>
-            <Input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-            <br />
-            <p>Password:</p>
-            <Input
-              type="password"
-              value={newPassword}
-              placeholder="Enter new password"
-              onChange={(e) => setNewPassword(e.target.value)}
-            />
-            <br />
-            {(email !== user?.email || newPassword) && (
-              <>
-                <label className="block mt-4 mb-2">Current Password (required to update email or password):</label>
+            <CardHeader>Update Profile</CardHeader>
+            <CardContent>
+              <form onSubmit={saveUserData} className="w-1/3">
+                <p>Username:</p>
                 <Input
+                  type="text"
+                  value={displayName}
+                  onChange={(e) => setDisplayName(e.target.value)}
+                />
+                <br />
+                <p>Email:</p>
+                <Input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+                <br />
+                <p>Password:</p>
+                <Input
+                  type="password"
+                  value={newPassword}
+                  placeholder="Enter new password"
+                  onChange={(e) => setNewPassword(e.target.value)}
+                />
+                <br />
+                {(email !== user?.email || newPassword) && (
+                  <>
+                    <label className="block mt-4 mb-2">Current Password (required to update email or password):</label>
+                    <Input
+                      type="password"
+                      value={currentPassword}
+                      onChange={(e) => setCurrentPassword(e.target.value)}
+                      required
+                    />
+                  </>
+                )}
+                <Button type="submit">Save Changes</Button>
+              </form>
+
+              <div className="mt-8">
+                <h2>Delete Account</h2>
+                <p>This action can not be reversed.</p>
+                <Input
+                  id="delete-password"
                   type="password"
                   value={currentPassword}
                   onChange={(e) => setCurrentPassword(e.target.value)}
+                  placeholder="Enter your password to delete account"
                   required
                 />
-              </>
-            )}
-            <Button type="submit">Save Changes</Button>
-          </form>
-
-          <div className="mt-8">
-            <h2>Delete Account</h2>
-            <p>This action can not be reversed.</p>
-            <Input
-              id="delete-password"
-              type="password"
-              value={currentPassword}
-              onChange={(e) => setCurrentPassword(e.target.value)}
-              placeholder="Enter your password to delete account"
-              required
-            />
-            <Button onClick={deleteAccount}>
-              Delete My Account
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
+                <Button onClick={deleteAccount} className="border-warning">
+                  Delete My Account
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
     </>
 
   );

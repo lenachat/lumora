@@ -38,45 +38,56 @@ const Dashboard = ({ user, journalEntries, setJournalEntries, streak, calculateS
 
   return (
     <>
-      <div className="p-4 flex flex-row">
-        <h1 className="w-32 flex-1">Lumora</h1>
-        <div className="w-32 flex-1 place-items-end">
-          <Navigation />
+      <div className="min-h-screen flex flex-col items-center ml-8 mr-8">
+        <Navigation />
+
+        <h1 className="p-4 text-center text-dark">Good to have you{user.displayName ? ", " + user.displayName : ""}!</h1>
+
+        <div className="m-4 grid grid-rows-5 grid-cols-2 gap-6 w-full max-w-7xl grow">
+          <div className="row-span-1 col-span-2">
+            <Card className=" p-4 border-none h-full w-full">
+              <DailyAffirmation
+                favoriteAffirmations={favoriteAffirmations}
+                setFavoriteAffirmations={setFavoriteAffirmations}
+              />
+            </Card>
+          </div>
+
+          <div className="row-span-1 col-span-1">
+            <Card className="p-4 basis-1/2 border-none h-full">
+              <JournalStreak streak={streak} />
+            </Card>
+          </div>
+
+          <div className="row-span-2 col-span-1">
+            <Card className="p-4 basis-1/2 border-none h-full w-full">
+              <JournalEntryForm
+                user={user}
+                journalEntries={journalEntries}
+                setJournalEntries={setJournalEntries}
+                setStreak={setStreak}
+                calculateStreak={calculateStreak} />
+            </Card>
+          </div>
+
+          <div className="row-span-3 col-span-1">
+            <Card className="p-4 basis-1/2 border-none h-full w-full">
+              <Link to="/journalEntries">
+                <JournalEntriesView journalEntries={journalEntries} />
+              </Link>
+            </Card>
+          </div>
+
+          <div className="row-span-2 col-span-1">
+            <Card className="p-4 basis-1/2 border-none h-full w-full">
+              <FavoriteAffirmations
+                favoriteAffirmations={favoriteAffirmations}
+              />
+            </Card>
+          </div>
+
         </div>
       </div>
-      <h1 className="p-4 place-self-center underline">Good to have you, {user.displayName}!</h1>
-      <Card className="m-4">
-        <Card className="m-4 p-4 place-items-center">
-          <h2 className="m-2 font-thin" >Your Affirmation of the Day</h2>
-          <DailyAffirmation
-            favoriteAffirmations={favoriteAffirmations}
-            setFavoriteAffirmations={setFavoriteAffirmations}
-          />
-        </Card>
-        <div className="flex flex-row">
-          <Card className="m-4 p-4 basis-1/2">
-            <JournalEntryForm
-              user={user}
-              journalEntries={journalEntries}
-              setJournalEntries={setJournalEntries}
-              setStreak={setStreak}
-              calculateStreak={calculateStreak} />
-          </Card>
-          <Card className="m-4 p-4 basis-1/2">
-            <Link to="/journalEntries">
-              <JournalEntriesView journalEntries={journalEntries} />
-            </Link>
-          </Card>
-          <Card className="m-4 p-4 basis-1/2">
-            <JournalStreak streak={streak} />
-          </Card>
-          <Card className="m-4 p-4">
-            <FavoriteAffirmations
-              favoriteAffirmations={favoriteAffirmations}
-            />
-          </Card>
-        </div>
-      </Card>
     </>
   );
 };

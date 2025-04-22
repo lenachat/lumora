@@ -8,6 +8,7 @@ import Navigation from "../navigation/navigation-bar";
 import { Button } from "../ui/button";
 import { Card } from "../ui/card";
 import { Link } from "react-router-dom";
+import { Input } from "../ui/input";
 
 interface JournalEntry {
   title: string;
@@ -72,37 +73,42 @@ const UpdateJournalEntry = ({ journalEntries, userId, setJournalEntries }: Updat
 
   return (
     <>
-      <div className="m-4 flex flex-row">
-        <h1 className="w-32 flex-1">Lumora</h1>
-        <div className="w-32 flex-1 place-items-end">
-          <Navigation />
+      <div className="flex flex-col ml-8 mr-8">
+        <Navigation />
+
+        <h2 className="p-2 text-center">Update Entry</h2>
+
+        <div>
+          <Link to={`/journalEntries/${index}`}>
+            <Button className='m-4 p-4 float-start'>
+              <img src="/../../../files/back.svg" alt="" className="w-8 h-8" />
+            </Button>
+          </Link>
+
+          <Card className="p-4 mb-6 mt-4 w-1/2 place-self-center border-none">
+            <h1 className='p-4'>Update your entry here:</h1>
+            <form onSubmit={handleUpdateEntry} className="p-4">
+              <label htmlFor="title"></label>
+              <Input
+                id="title"
+                name="title"
+                type="text"
+                value={updatedTitle}
+                onChange={(e) => setUpdatedTitle(e.target.value)}
+                className="mb-2 text-primary border-none"
+                required
+              />
+              <label htmlFor="entry"></label>
+              <textarea id="entry" name="entry" rows={10} cols={50} value={updatedEntry}
+                onChange={(e) => setUpdatedEntry(e.target.value)}
+                className="w-full p-3 mb-2 text-sm resize-none rounded-xl bg-background text-primary focus:outline-none placeholder:text-base placeholder:text-md"
+              ></textarea>
+              <br />
+              <Button type="submit">Save Changes</Button>
+            </form>
+          </Card>
         </div>
       </div>
-      <Link to={`/journalEntries/${index}`}>
-        <Button className='m-4 p-4 float-start'>
-          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><g data-name="16. Previous" id="_16._Previous"><path d="M12,0A12,12,0,1,0,24,12,12.013,12.013,0,0,0,12,0Zm0,22A10,10,0,1,1,22,12,10.011,10.011,0,0,1,12,22Z" /><path d="M14.768,6.36a1,1,0,0,0-1.408-.128l-6,5a1,1,0,0,0,0,1.536l6,5a1,1,0,1,0,1.28-1.536L9.562,12,14.64,7.768A1,1,0,0,0,14.768,6.36Z" /></g></svg>
-        </Button>
-      </Link>
-      <Card className="p-4 w-1/2 place-self-center">
-        <h1 className='p-4'>Update your entry here:</h1>
-        <form onSubmit={handleUpdateEntry} className="p-4">
-          <label htmlFor="title"></label>
-          <input
-            id="title"
-            name="title"
-            type="text"
-            value={updatedTitle}
-            onChange={(e) => setUpdatedTitle(e.target.value)}
-            className="w-full p-2 border border-gray-300 rounded"
-            required
-          />
-          <label htmlFor="entry"></label>
-          <textarea id="entry" name="entry" rows={10} cols={50} value={updatedEntry}
-            onChange={(e) => setUpdatedEntry(e.target.value)}></textarea>
-          <br />
-          <Button type="submit">Save Changes</Button>
-        </form>
-      </Card>
     </>
   );
 

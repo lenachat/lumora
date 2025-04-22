@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { db } from "../../firebase";
 import { doc, updateDoc, arrayUnion, arrayRemove } from "firebase/firestore";
 import { v4 as uuidv4 } from "uuid";
+import { Button } from "../ui/button";
 
 interface DailyAffirmationProps {
   favoriteAffirmations: { id: string; affirmation: string }[];
@@ -14,30 +15,6 @@ const DailyAffirmation = ({ favoriteAffirmations, setFavoriteAffirmations }: Dai
 
   const userData = localStorage.getItem("user");
   const userId = userData ? JSON.parse(userData).uid : null;
-
-  // useEffect(() => {
-  //   const fetchFavoritesFromFirestore = async () => {
-  //     const user = JSON.parse(localStorage.getItem("user") || "{}");
-  //     const userId = user?.uid;
-  //     if (!userId) return;
-
-  //     try {
-  //       const userDocRef = doc(db, "users", userId);
-  //       const userSnap = await getDoc(userDocRef);
-
-  //       if (userSnap.exists()) {
-  //         const data = userSnap.data();
-  //         const favorites = data.favoriteAffirmations || [];
-
-  //         localStorage.setItem("favoriteAffirmations", JSON.stringify(favorites));
-  //       }
-  //     } catch (error) {
-  //       console.error("Error syncing favorites from Firestore:", error);
-  //     }
-  //   };
-
-  //   fetchFavoritesFromFirestore();
-  // }, []);
 
   useEffect(() => {
     const today = new Date().toISOString().split("T")[0]; // format: YYYY-MM-DD
@@ -73,20 +50,6 @@ const DailyAffirmation = ({ favoriteAffirmations, setFavoriteAffirmations }: Dai
     const isFav = favoriteAffirmations.some(fav => fav.affirmation === affirmation);
     setIsFavorite(isFav);
   }, [affirmation, favoriteAffirmations]);
-
-
-  // useEffect(() => {
-  //   if (!affirmation || !userId) return;
-
-  //   const favorites = JSON.parse(localStorage.getItem("favoriteAffirmations") || "[]");
-  //   const match = favorites.find((fav: { affirmation: string }) => fav.affirmation === affirmation);
-
-  //   if (match) {
-  //     setIsFavorite(true);
-  //   } else {
-  //     setIsFavorite(false);
-  //   }
-  // }, [affirmation, userId]);
 
 
   const toggleFavorite = async () => {
@@ -127,10 +90,15 @@ const DailyAffirmation = ({ favoriteAffirmations, setFavoriteAffirmations }: Dai
 
   return (
     <>
-      <div>{affirmation}.</div>
-      <button onClick={toggleFavorite} style={{ fontSize: "1.5rem", background: "none", border: "none", cursor: "pointer" }}>
-        {isFavorite ? "⭐" : "☆"}
-      </button>
+      <div className="place-items-center pt-3">
+        <h2 className="mt-2 mb-2 font-thin">Daily Affirmation</h2>
+        <p className="text-lg">{affirmation}.</p>
+      </div>
+      <div className="flex justify-end m-2">
+        <Button onClick={toggleFavorite} className="m-2 border-none hover:bg-base">
+          {isFavorite ? <img src="../../../files/heart-filled.svg" className="w-6 h-6" /> : <img src="../../../files/heart.svg" className="w-6 h-6" />}
+        </Button>
+      </div>
     </>
   );
 };

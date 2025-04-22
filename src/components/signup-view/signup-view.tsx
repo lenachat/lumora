@@ -64,39 +64,41 @@ const SignupView = () => {
 
   return (
     <>
-      <div className="m-4">
+      <div className="flex flex-col ml-8 mr-8">
         <Navigation />
-      </div>
-      <Card className="m-4 w-1/3 place-self-center">
-        <CardHeader>Signup</CardHeader>
-        <CardContent>
-          <form onSubmit={handleSignup}>
-            <Input
-              type="username"
-              placeholder="Username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-            />
-            <br />
-            <Input
-              type="email"
-              placeholder="Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-            <br />
-            <Input
-              type="password"
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-            <br />
-            <Button type="submit">Sign Up</Button>
-          </form>
-        </CardContent>
-      </Card>
 
+        <Card className="m-4 w-1/3 place-self-center">
+          <CardHeader className="text-center">Signup</CardHeader>
+          <CardContent>
+            <form onSubmit={handleSignup}>
+              <Input
+                type="username"
+                placeholder="Username"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                className="mb-2 text-primary border-none"
+              />
+              <Input
+                type="email"
+                placeholder="Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="mb-2 text-primary border-none"
+              />
+              <Input
+                type="password"
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="mb-2 text-primary border-none"
+              />
+              <div className="flex justify-center">
+                <Button type="submit">Sign Up</Button>
+              </div>
+            </form>
+          </CardContent>
+        </Card>
+      </div>
     </>
 
   );

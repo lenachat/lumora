@@ -15,19 +15,21 @@ interface JournalEntriesList {
 const JournalEntriesView = ({ journalEntries }: JournalEntriesList) => {
   return (
     <>
-      <h2 className="p-2 place-self-center">Last 4 Journal Entries in Dashboard</h2>
+      <h2 className="mb-3 mt-6 place-self-center">All Journal Entries</h2>
       <div>
         {journalEntries
           .sort((a, b) => new Date(b.created).getTime() - new Date(a.created).getTime()) // Sort by created date in descending order
           .slice(0, 4)
           .map((entry, index) => ( // Show only the last 4 entries
             <Card key={index} className="p-4 m-2 transition-transform duration-300 ease-in-out transform hover:scale-x-105 hover:shadow-md">
-              <div className="flex flex-row">
-                <p className='w-32 flex-1 font-thin'>{entry.created.toLocaleDateString()}, {entry.created.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
-                <p className='w-32 flex-1 place-items-end font-thin'>Last Updated: {entry.updated.toLocaleDateString()}, {entry.updated.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
+              <div className="flex justify-end">
+                <p className='text-right text-light text-sm font-thin mr-3'>
+                  {entry.created.toLocaleDateString()}
+                </p>
+                {/* <p className='w-32 flex-1 place-items-end font-thin'>Last Updated: {entry.updated.toLocaleDateString()}, {entry.updated.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p> */}
               </div>
-              <h3>{entry.title}</h3>
-              <p className='line-clamp'>{entry.entry}</p>
+              <h3 className='text-xl mt-1 mb-2 ml-3 mr-3'>{entry.title}</h3>
+              <p className='line-clamp ml-3 mr-3 mb-2'>{entry.entry}</p>
             </Card>
           ))}
       </div>

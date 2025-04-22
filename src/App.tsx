@@ -1,7 +1,7 @@
 import MainView from './components/main-view/main-view.tsx';
 function App() {
   return (
-    <div>
+    <div className="bg-background min-h-screen">
       <MainView />
     </div>
 

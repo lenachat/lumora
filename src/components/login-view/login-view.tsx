@@ -48,31 +48,34 @@ const LoginView = () => {
 
   return (
     <>
-      <div className="m-4">
+      <div className="flex flex-col ml-8 mr-8">
         <Navigation />
+
+        <Card className="m-4 w-1/3 place-self-center">
+          <CardHeader className="text-center">Login</CardHeader>
+          <CardContent>
+            <form onSubmit={handleLogin}>
+              <Input
+                type="email"
+                placeholder="Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="mb-2 text-primary border-none"
+              />
+              <Input
+                type="password"
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="mb-2 text-primary border-none"
+              />
+              <div className="flex justify-center">
+                <Button type="submit">Login</Button>
+              </div>
+            </form>
+          </CardContent>
+        </Card>
       </div>
-      <Card className="m-4 w-1/3 place-self-center">
-        <CardHeader>Login</CardHeader>
-        <CardContent>
-          <form onSubmit={handleLogin}>
-            <Input
-              type="email"
-              placeholder="Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-            <br />
-            <Input
-              type="password"
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-            <br />
-            <Button type="submit">Login</Button>
-          </form>
-        </CardContent>
-      </Card>
     </>
   );
 };
