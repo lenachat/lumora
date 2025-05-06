@@ -145,7 +145,7 @@ const MainView = () => {
         <Route path='/journalEntries/:index' element={user ? <SingleJournalEntry user={user} journalEntries={journalEntries} setJournalEntries={setJournalEntries} /> : <Navigate to="/login" />} />
         <Route path='/journalEntries/:index/edit' element={user ? <UpdateJournalEntry journalEntries={journalEntries} userId={user.uid} setJournalEntries={setJournalEntries} /> : <Navigate to="/login" />} />
         <Route path='/profile' element={user ? <ProfileView /> : <Navigate to="/login" />} />
-        <Route path='/favoriteAffirmations' element={user ? <AllFavoriteAffirmations favoriteAffirmations={favoriteAffirmations} /> : <Navigate to="/login" />} />
+        <Route path='/favoriteAffirmations' element={user ? <AllFavoriteAffirmations favoriteAffirmations={favoriteAffirmations} setFavoriteAffirmations={setFavoriteAffirmations} /> : <Navigate to="/login" />} />
       </Routes>
     </BrowserRouter>
   );
