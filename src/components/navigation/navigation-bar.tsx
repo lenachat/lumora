@@ -32,7 +32,7 @@ const Navigation = () => {
                 <div className="w-32 flex-1 place-items-end">
                   <NavigationMenuItem>
                     <Link to="/login">
-                      <Button>Login</Button>
+                      <Button className="border-none">Login</Button>
                     </Link>
                   </NavigationMenuItem>
                 </div>
@@ -40,7 +40,7 @@ const Navigation = () => {
                 <div className="w-32 flex-1 place-items-end">
                   <NavigationMenuItem>
                     <Link to="/signup">
-                      <Button>Signup</Button>
+                      <Button className="border-none">Signup</Button>
                     </Link>
                   </NavigationMenuItem>
                 </div>
@@ -50,13 +50,13 @@ const Navigation = () => {
           ) : (
             <div className="flex place-items-end">
               <NavigationMenuItem>
-                <Button onClick={handleLogout}>
+                <Button onClick={handleLogout} className="border-none">
                   <img src="/../../../files/logout.svg" alt="" className="mt-4 h-8" />
                 </Button>
               </NavigationMenuItem>
               <NavigationMenuItem>
                 <Link to="/profile">
-                  <Button>
+                  <Button className="border-none">
                     <img src="/../../../files/profile.svg" alt="" className="mt-4 h-8" />
                   </Button>
                 </Link>

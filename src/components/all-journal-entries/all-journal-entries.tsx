@@ -33,7 +33,7 @@ const AllJournalEntries = ({ journalEntries }: JournalEntriesList) => {
             .sort((a, b) => new Date(b.created).getTime() - new Date(a.created).getTime()) // Sort by created date in descending order
             .map((entry, index) => (
               <div key={index}>
-                <Card className="p-4 mb-6 mt-4 w-1/2 place-self-center border-none transition-transform duration-300 ease-in-out transform hover:scale-x-105 hover:shadow-md">
+                <Card className="p-4 mb-6 rounded-[25px] mt-4 w-1/2 place-self-center border-none transition-transform duration-300 ease-in-out transform hover:scale-x-105 hover:shadow-md">
                   <Link to={`/journalEntries/${index}`}>
                     <div className="flex justify-between">
                       <p className='text-left text-light text-sm font-thin ml-3 mr-3'>

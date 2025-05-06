@@ -25,7 +25,7 @@ const FavoriteAffirmations = ({ favoriteAffirmations }: FavoriteAffirmationsProp
             <Card
               key={index}
               onClick={() => toggleExpand(index)}
-              className="p-4 m-2 transition-transform duration-300 ease-in-out transform hover:scale-x-105 hover:shadow-md"
+              className="p-4 m-2 rounded-[25px] transition-transform duration-300 ease-in-out transform hover:scale-x-105 hover:shadow-md"
             >
               <li className="mt-1 mb-2 ml-3 mr-3">
                 <span className={isExpanded ? "hidden" : "block truncate"}>

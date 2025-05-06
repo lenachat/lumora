@@ -67,7 +67,7 @@ const SignupView = () => {
       <div className="flex flex-col ml-8 mr-8">
         <Navigation />
 
-        <Card className="m-4 w-1/3 place-self-center">
+        <Card className="m-4 pl-10 pr-10 w-1/3 place-self-center border-none rounded-[35px]">
           <CardHeader className="text-center">Signup</CardHeader>
           <CardContent>
             <form onSubmit={handleSignup}>
@@ -94,6 +94,14 @@ const SignupView = () => {
               />
               <div className="flex justify-center">
                 <Button type="submit">Sign Up</Button>
+              </div>
+              <div className="flex justify-center mt-2">
+                <p className="text-sm text-gray-500">
+                  Already have an account?{" "}
+                  <a href="/login" className="text-cyan-500 hover:underline">
+                    Log in
+                  </a>
+                </p>
               </div>
             </form>
           </CardContent>

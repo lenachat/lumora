@@ -70,14 +70,14 @@ const JournalEntryForm = (
               id="journalTitle"
               value={journalTitle}
               onChange={(e) => setJournalTitle(e.target.value)}
-              placeholder="Gratitude Journal"
+              placeholder="Journal Title"
               className="mb-2 text-primary border-none"
             />
             <textarea
               value={journalEntry}
               onChange={(e) => setJournalEntry(e.target.value)}
               placeholder="Today I am grateful for..."
-              rows={5}
+              rows={8}
               className="w-full p-3 mb-2 text-sm resize-none rounded-xl bg-background text-primary focus:outline-none placeholder:text-base placeholder:text-md"
             />
             <Button type="submit">Save</Button>

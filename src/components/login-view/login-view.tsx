@@ -50,8 +50,7 @@ const LoginView = () => {
     <>
       <div className="flex flex-col ml-8 mr-8">
         <Navigation />
-
-        <Card className="m-4 w-1/3 place-self-center">
+        <Card className="m-4 pl-10 pr-10 w-1/3 place-self-center border-none rounded-[35px]">
           <CardHeader className="text-center">Login</CardHeader>
           <CardContent>
             <form onSubmit={handleLogin}>
@@ -71,6 +70,14 @@ const LoginView = () => {
               />
               <div className="flex justify-center">
                 <Button type="submit">Login</Button>
+              </div>
+              <div className="flex justify-center mt-2">
+                <p className="text-sm text-gray-500">
+                  Don't have an account?{" "}
+                  <a href="/signup" className="text-cyan-500 hover:underline">
+                    Sign up
+                  </a>
+                </p>
               </div>
             </form>
           </CardContent>

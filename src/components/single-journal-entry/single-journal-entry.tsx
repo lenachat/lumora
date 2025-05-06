@@ -67,7 +67,7 @@ const SingleJournalEntry = ({ user, journalEntries, setJournalEntries }: SingleJ
               <img src="/../../../files/back.svg" alt="" className="w-8 h-8" />
             </Button>
           </Link>
-          <Card className="p-4 mb-6 mt-4 w-1/2 place-self-center border-none">
+          <Card className="p-4 mb-6 mt-4 w-1/2 place-self-center border-none rounded-[35px]">
             <div className="flex justify-between">
               <p className='text-left text-light text-sm font-thin ml-3 mr-3'>
                 {entry.created.toLocaleDateString()}

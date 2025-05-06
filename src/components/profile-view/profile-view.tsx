@@ -134,15 +134,20 @@ const ProfileView = () => {
               <img src="/../../../files/back.svg" alt="" className="w-8 h-8" />
             </Button>
           </Link>
-          <Card className="p-4 mb-6 mt-4 w-2/3 place-self-center border-none">
-            <CardHeader>User Information</CardHeader>
+
+          <Card className="p-4 mb-6 mt-4 w-2/3 place-self-center border-none rounded-[35px]">
+            <CardHeader className="font-semibold">User Information</CardHeader>
             <CardContent>
               <p><strong>Username:</strong> {user?.displayName}</p>
               <p><strong>Email:</strong> {user?.email}</p>
-              <p>Email verified? {emailVerified ? "Yes" : "Email not verified. Please check your inbox."} </p>
+              <p>Email verified? {emailVerified ? "Yes" : (
+                <>
+                  Email not verified. <strong>Please check your inbox.</strong>
+                </>)}
+              </p>
             </CardContent>
 
-            <CardHeader>Update Profile</CardHeader>
+            <CardHeader className="font-semibold">Update Profile</CardHeader>
             <CardContent>
               <form onSubmit={saveUserData} className="w-1/3">
                 <p>Username:</p>
@@ -150,6 +155,7 @@ const ProfileView = () => {
                   type="text"
                   value={displayName}
                   onChange={(e) => setDisplayName(e.target.value)}
+                  className="text-primary border-none"
                 />
                 <br />
                 <p>Email:</p>
@@ -157,6 +163,7 @@ const ProfileView = () => {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
+                  className="text-primary border-none"
                 />
                 <br />
                 <p>Password:</p>
@@ -165,6 +172,7 @@ const ProfileView = () => {
                   value={newPassword}
                   placeholder="Enter new password"
                   onChange={(e) => setNewPassword(e.target.value)}
+                  className="text-primary border-none"
                 />
                 <br />
                 {(email !== user?.email || newPassword) && (
@@ -175,25 +183,31 @@ const ProfileView = () => {
                       value={currentPassword}
                       onChange={(e) => setCurrentPassword(e.target.value)}
                       required
+                      className="text-primary border-none"
                     />
                   </>
                 )}
                 <Button type="submit">Save Changes</Button>
               </form>
+            </CardContent>
 
-              <div className="mt-8">
-                <h2>Delete Account</h2>
-                <p>This action can not be reversed.</p>
-                <Input
-                  id="delete-password"
-                  type="password"
-                  value={currentPassword}
-                  onChange={(e) => setCurrentPassword(e.target.value)}
-                  placeholder="Enter your password to delete account"
-                  required
-                />
-                <Button onClick={deleteAccount} className="border-warning">
-                  Delete My Account
+            <CardHeader className="font-semibold">Delete Account</CardHeader>
+            <CardContent>
+              <p>To delete your account, please enter your current password:</p>
+              <Input
+                id="delete-password"
+                type="password"
+                value={currentPassword}
+                onChange={(e) => setCurrentPassword(e.target.value)}
+                placeholder="Enter password"
+                required
+                className="text-primary border-none"
+              />
+              <div className="mt-4">
+                <p>Are you sure you want to delete your account?</p>
+                <p>This action can not be undone.</p>
+                <Button onClick={deleteAccount} className="border-warning hover:bg-warning">
+                  Delete my account
                 </Button>
               </div>
             </CardContent>
