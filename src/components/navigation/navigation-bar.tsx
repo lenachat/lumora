@@ -22,7 +22,7 @@ const Navigation = () => {
         <div className="p-4 flex w-full items-center justify-between">
           <div className="">
             <Link to="/">
-              <img src="../../../files/lumora-logo-light.png" alt="" className="h-20" />
+              <img src="/lumora-logo-light.png" alt="" className="h-20" />
             </Link>
           </div>
 
@@ -51,13 +51,13 @@ const Navigation = () => {
             <div className="flex place-items-end">
               <NavigationMenuItem>
                 <Button onClick={handleLogout} className="border-none">
-                  <img src="/../../../files/logout.svg" alt="" className="mt-4 h-8" />
+                  <img src="/logout.svg" alt="" className="mt-4 h-8" />
                 </Button>
               </NavigationMenuItem>
               <NavigationMenuItem>
                 <Link to="/profile">
                   <Button className="border-none">
-                    <img src="/../../../files/profile.svg" alt="" className="mt-4 h-8" />
+                    <img src="/profile.svg" alt="" className="mt-4 h-8" />
                   </Button>
                 </Link>
               </NavigationMenuItem>

@@ -96,7 +96,7 @@ const DailyAffirmation = ({ favoriteAffirmations, setFavoriteAffirmations }: Dai
       </div>
       <div className="flex justify-end m-2">
         <Button onClick={toggleFavorite} className="m-2 border-none hover:bg-base">
-          {isFavorite ? <img src="../../../files/heart-filled.svg" className="w-6 h-6" /> : <img src="../../../files/heart.svg" className="w-6 h-6" />}
+          {isFavorite ? <img src="/heart-filled.svg" className="w-6 h-6" /> : <img src="/heart.svg" className="w-6 h-6" />}
         </Button>
       </div>
     </>

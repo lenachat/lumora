@@ -64,7 +64,7 @@ const SingleJournalEntry = ({ user, journalEntries, setJournalEntries }: SingleJ
         <div>
           <Link to="/journalEntries">
             <Button className='m-4 p-4 float-start'>
-              <img src="/../../../files/back.svg" alt="" className="w-8 h-8" />
+              <img src="/back.svg" alt="" className="w-8 h-8" />
             </Button>
           </Link>
           <Card className="p-4 mb-6 mt-4 w-1/2 place-self-center border-none rounded-[35px]">

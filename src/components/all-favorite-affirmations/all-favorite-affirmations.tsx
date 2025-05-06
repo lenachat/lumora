@@ -46,7 +46,7 @@ const AllFavoriteAffirmations = ({
         <div>
           <Link to="/">
             <Button className="m-4 p-4 float-start">
-              <img src="/../../../files/back.svg" alt="" className="w-8 h-8" />
+              <img src="/back.svg" alt="" className="w-8 h-8" />
             </Button>
           </Link>
 
@@ -63,7 +63,7 @@ const AllFavoriteAffirmations = ({
                   className=" border-none hover:bg-base"
                 >
                   <img
-                    src="/../../../files/heart-filled.svg"
+                    src="/heart-filled.svg"
                     alt="Unfavorite"
                     className="w-6 h-6"
                   />

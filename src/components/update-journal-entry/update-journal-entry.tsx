@@ -81,7 +81,7 @@ const UpdateJournalEntry = ({ journalEntries, userId, setJournalEntries }: Updat
         <div>
           <Link to={`/journalEntries/${index}`}>
             <Button className='m-4 p-4 float-start'>
-              <img src="/../../../files/back.svg" alt="" className="w-8 h-8" />
+              <img src="/back.svg" alt="" className="w-8 h-8" />
             </Button>
           </Link>
 
