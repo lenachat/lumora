@@ -7,7 +7,7 @@ import FavoriteAffirmations from "../favorite-affirmations/favorite-affirmations
 import { Card } from "../ui/card";
 import "./dashboard.css";
 import { Link } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 interface User {
   displayName: string;
@@ -27,10 +27,13 @@ interface DashboardProps {
   streak: number;
   calculateStreak: (dates: Date[]) => number;
   setStreak: (streak: number) => void;
+  favoriteAffirmations: { id: string; affirmation: string }[];
+  setFavoriteAffirmations: (affirmations: { id: string; affirmation: string }[]) => void;
 }
 
-const Dashboard = ({ user, journalEntries, setJournalEntries, streak, calculateStreak, setStreak }: DashboardProps) => {
-  const [favoriteAffirmations, setFavoriteAffirmations] = useState<{ id: string; affirmation: string }[]>([]);
+const Dashboard = ({ user, journalEntries, setJournalEntries, streak, calculateStreak, setStreak, favoriteAffirmations,
+  setFavoriteAffirmations }: DashboardProps) => {
+  // const [favoriteAffirmations, setFavoriteAffirmations] = useState<{ id: string; affirmation: string }[]>([]);
 
   useEffect(() => {
     const stored = JSON.parse(localStorage.getItem("favoriteAffirmations") || "[]");

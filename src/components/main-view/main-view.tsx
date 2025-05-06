@@ -9,6 +9,7 @@ import { db } from '../../firebase';
 import SingleJournalEntry from '../single-journal-entry/single-journal-entry';
 import UpdateJournalEntry from '../update-journal-entry/update-journal-entry';
 import ProfileView from '../profile-view/profile-view';
+import AllFavoriteAffirmations from '../all-favorite-affirmations/all-favorite-affirmations';
 
 interface User {
   uid: string;
@@ -16,15 +17,20 @@ interface User {
 }
 
 interface JournalEntry {
+  title: string;
   created: Date;
   entry: string;
   updated: Date;
 }
 
+
+
 const MainView = () => {
   const [user, setUser] = useState<User | null>(null);
   const [journalEntries, setJournalEntries] = useState<JournalEntry[]>([]);
   const [streak, setStreak] = useState<number>(0);
+  const [favoriteAffirmations, setFavoriteAffirmations] = useState<{ id: string; affirmation: string }[]>([]);
+
 
   useEffect(() => {
     const user = localStorage.getItem('user');
@@ -115,6 +121,8 @@ const MainView = () => {
                 streak={streak}
                 setStreak={setStreak}
                 calculateStreak={calculateStreak}
+                favoriteAffirmations={favoriteAffirmations}
+                setFavoriteAffirmations={setFavoriteAffirmations}
               />
             ) : (<Navigate to="/login" />)}
           </>
@@ -137,6 +145,7 @@ const MainView = () => {
         <Route path='/journalEntries/:index' element={user ? <SingleJournalEntry user={user} journalEntries={journalEntries} setJournalEntries={setJournalEntries} /> : <Navigate to="/login" />} />
         <Route path='/journalEntries/:index/edit' element={user ? <UpdateJournalEntry journalEntries={journalEntries} userId={user.uid} setJournalEntries={setJournalEntries} /> : <Navigate to="/login" />} />
         <Route path='/profile' element={user ? <ProfileView /> : <Navigate to="/login" />} />
+        <Route path='/favoriteAffirmations' element={user ? <AllFavoriteAffirmations favoriteAffirmations={favoriteAffirmations} /> : <Navigate to="/login" />} />
       </Routes>
     </BrowserRouter>
   );

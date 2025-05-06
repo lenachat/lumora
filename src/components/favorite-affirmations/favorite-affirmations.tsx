@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Card } from "../ui/card";
+import { Link } from "react-router-dom";
 
 interface FavoriteAffirmationsProps {
   favoriteAffirmations: { id: string; affirmation: string }[];
@@ -22,6 +23,7 @@ const FavoriteAffirmations = ({ favoriteAffirmations }: FavoriteAffirmationsProp
         {favoriteAffirmations.slice(0, 4).map((fav: { affirmation: string }, index: number) => {
           const isExpanded = expandedIndexes.includes(index);
           return (
+            <Link to={`/favoriteAffirmations`}>
             <Card
               key={index}
               onClick={() => toggleExpand(index)}
@@ -36,6 +38,7 @@ const FavoriteAffirmations = ({ favoriteAffirmations }: FavoriteAffirmationsProp
                 </span>
               </li>
             </Card>
+            </Link>
           );
         })}
       </ul>
