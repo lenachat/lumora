@@ -3,6 +3,16 @@ import { Button } from '../ui/button';
 import { db } from '@/firebase';
 import { doc, updateDoc, arrayUnion } from "firebase/firestore";
 import { Input } from '../ui/input';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+  DialogClose,
+} from "@/components/ui/dialog";
+
 
 interface User {
   displayName: string;
@@ -30,6 +40,14 @@ const JournalEntryForm = (
   const [journalTitle, setJournalTitle] = useState<string>('');
   const [journalEntry, setJournalEntry] = useState<string>('');
 
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [dialogMessage, setDialogMessage] = useState("");
+
+  const showDialog = (message: string) => {
+    setDialogMessage(message);
+    setIsDialogOpen(true);
+  };
+
   const handleSaveEntry = async (e: React.FormEvent) => {
     e.preventDefault();
     const newEntry = {
@@ -47,12 +65,14 @@ const JournalEntryForm = (
       const updatedEntries = [...journalEntries, newEntry];
       setJournalEntries(updatedEntries);
       setJournalEntry('');
+      setJournalTitle('');
       // Update the streak count
       const createdDates = updatedEntries.map(entry => new Date(entry.created));
       const streakCount = calculateStreak(createdDates);
       setStreak(streakCount); // update the state from parent
-      alert("Journal entry saved successfully!");
+      showDialog("Journal entry saved successfully! Keep it up :)");
     } catch (error) {
+      showDialog("Error saving journal entry. Please check your connection and try again.");
       console.error("Error saving journal entry: ", error);
     }
   };
@@ -84,10 +104,21 @@ const JournalEntryForm = (
           </form>
         </div>
       </div>
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <DialogContent className="bg-background text-primary rounded-xl">
+          <DialogHeader>
+            <DialogTitle>Notification</DialogTitle>
+            <DialogDescription>{dialogMessage}</DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <DialogClose asChild>
+              <Button onClick={() => setIsDialogOpen(false)}>OK</Button>
+            </DialogClose>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </>
-
-  )
-
-}
+  );
+};
 
 export default JournalEntryForm;

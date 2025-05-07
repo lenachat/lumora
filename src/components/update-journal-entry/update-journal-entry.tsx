@@ -9,6 +9,15 @@ import { Button } from "../ui/button";
 import { Card } from "../ui/card";
 import { Link } from "react-router-dom";
 import { Input } from "../ui/input";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+  DialogClose,
+} from "@/components/ui/dialog";
 
 interface JournalEntry {
   title: string;
@@ -24,6 +33,15 @@ interface UpdateJournalEntryProps {
 }
 
 const UpdateJournalEntry = ({ journalEntries, userId, setJournalEntries }: UpdateJournalEntryProps) => {
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [dialogMessage, setDialogMessage] = useState("");
+  const [shouldNavigate, setShouldNavigate] = useState(false);
+
+  const showDialog = (message: string) => {
+    setDialogMessage(message);
+    setIsDialogOpen(true);
+  };
+
   const navigate = useNavigate();
   const { index } = useParams<{ index: string }>();  // Get the index from the URL
   const entryIndex = parseInt(index ?? "0", 10);
@@ -64,9 +82,10 @@ const UpdateJournalEntry = ({ journalEntries, userId, setJournalEntries }: Updat
       await updateDoc(userDocRef, { journalEntries: updatedJournalEntries.sort((a, b) => new Date(b.created).getTime() - new Date(a.created).getTime()) });
       // Update local state
       setJournalEntries([...updatedJournalEntries]);
-      alert("Journal entry updated successfully!");
-      navigate(`/journalEntries/${entryIndex}`);
+      setShouldNavigate(true);
+      showDialog("Journal entry updated successfully!");
     } catch (error) {
+      showDialog("Error updating journal entry. Please check your connection and try again.");
       console.error("Error updating journal entry:", error);
     }
   };
@@ -109,6 +128,26 @@ const UpdateJournalEntry = ({ journalEntries, userId, setJournalEntries }: Updat
           </Card>
         </div>
       </div>
+      <Dialog open={isDialogOpen}
+        onOpenChange={(open) => {
+          setIsDialogOpen(open);
+          if (!open && shouldNavigate) {
+            navigate(`/journalEntries/${entryIndex}`);
+          }
+        }}
+      >
+        <DialogContent className="bg-background text-primary">
+          <DialogHeader>
+            <DialogTitle>Notification</DialogTitle>
+            <DialogDescription>{dialogMessage}</DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <DialogClose asChild>
+              <Button onClick={() => setIsDialogOpen(false)}>OK</Button>
+            </DialogClose>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </>
   );
 

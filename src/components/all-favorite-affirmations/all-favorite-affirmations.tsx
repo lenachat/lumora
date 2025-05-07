@@ -53,10 +53,8 @@ const AllFavoriteAffirmations = ({
           {favoriteAffirmations.map((affirmation) => (
             <Card
               key={affirmation.id}
-              className="p-4 mb-6 rounded-[25px] mt-4 w-1/2 place-self-center border-none relative"
-            >
+              className="p-6 mb-6 rounded-[25px] mt-4 w-1/2 place-self-center border-none relative">
               <p className="line-clamp-3 ml-3 mr-3 mb-2">{affirmation.affirmation}</p>
-
               <div className="flex justify-end">
                 <Button
                   onClick={() => handleUnfavorite(affirmation.id)}

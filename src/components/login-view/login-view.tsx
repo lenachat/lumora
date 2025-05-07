@@ -8,10 +8,28 @@ import { Input } from "../ui/input";
 import { db } from "../../firebase";
 import { collection, query, where, getDocs } from "firebase/firestore";
 import { FirebaseError } from "firebase/app";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+  DialogClose,
+} from "@/components/ui/dialog";
+
 
 const LoginView = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [dialogMessage, setDialogMessage] = useState("");
+
+  const showDialog = (message: string) => {
+    setDialogMessage(message);
+    setIsDialogOpen(true);
+  };
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -22,7 +40,7 @@ const LoginView = () => {
       const querySnapshot = await getDocs(q);
 
       if (querySnapshot.empty) {
-        alert("No account found with this email. Please sign up.");
+        showDialog("No account found with this email. Please sign up.");
         return;
       } else {
         const userCredential = await signInWithEmailAndPassword(auth, email, password);
@@ -39,9 +57,9 @@ const LoginView = () => {
     } catch (error: unknown) {
       console.error("Login failed: ", error);
       if ((error as FirebaseError).code === "auth/invalid-credential") {
-        alert("Incorrect password. Please try again.");
+        showDialog("Incorrect password. Please try again.");
       } else {
-        alert("Login failed. Please try again.");
+        showDialog("Login failed. Please try again.");
       }
     }
   }
@@ -83,6 +101,19 @@ const LoginView = () => {
           </CardContent>
         </Card>
       </div>
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <DialogContent className="bg-background text-primary rounded-xl">
+          <DialogHeader>
+            <DialogTitle>Error</DialogTitle>
+            <DialogDescription>{dialogMessage}</DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <DialogClose asChild>
+              <Button onClick={() => setIsDialogOpen(false)}>OK</Button>
+            </DialogClose>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </>
   );
 };

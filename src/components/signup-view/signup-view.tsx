@@ -7,18 +7,36 @@ import Navigation from "../navigation/navigation-bar.tsx";
 import { Button } from "../ui/button";
 import { Card, CardHeader, CardContent } from "../ui/card";
 import { Input } from "../ui/input";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+  DialogClose,
+} from "@/components/ui/dialog";
 
 const SignupView = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [dialogMessage, setDialogMessage] = useState("");
+  const [shouldReload, setShouldReload] = useState(false);
+
+  const showDialog = (message: string, reloadAfterClose = false) => {
+    setDialogMessage(message);
+    setIsDialogOpen(true);
+    setShouldReload(reloadAfterClose);
+  };
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
 
     // Check if required fields are filled
     if (!email || !password || !username) {
-      alert("Please fill out all fields to sign up.");
+      showDialog("Please fill out all fields to sign up.");
       return;
     }
 
@@ -28,7 +46,7 @@ const SignupView = () => {
       const querySnapshot = await getDocs(query(usersRef, where("email", "==", email)));
 
       if (!querySnapshot.empty) {
-        alert("This email is already in use. Please login instead.");
+        showDialog("This email is already in use. Please login instead.");
         return;
       } else {
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
@@ -49,16 +67,16 @@ const SignupView = () => {
         // Send email verification
         if (user && !user.emailVerified) {
           await sendEmailVerification(user);
-          alert("Verification email sent! Please check your inbox before proceeding.");
+          localStorage.setItem("user", JSON.stringify(user));
+          //window.location.reload();
+          showDialog("Signup succesful! You received a verification email. Please check your inbox before proceeding.", true);
         }
-        //alert("User created successfully");
-        localStorage.setItem("user", JSON.stringify(user));
-        window.location.reload();
+
       }
     }
     catch (error) {
       console.error("Signup error: ", error);
-      alert("Signup failed. Please try again.");
+      showDialog("Signup failed. Please try again.");
     }
   }
 
@@ -107,8 +125,25 @@ const SignupView = () => {
           </CardContent>
         </Card>
       </div>
+      <Dialog open={isDialogOpen} onOpenChange={(open) => {
+        setIsDialogOpen(open);
+        if (!open && shouldReload) {
+          window.location.reload();
+        }
+      }}>
+        <DialogContent className="bg-background text-primary">
+          <DialogHeader>
+            <DialogTitle>Notification</DialogTitle>
+            <DialogDescription>{dialogMessage}</DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <DialogClose asChild>
+              <Button onClick={() => setIsDialogOpen(false)}>OK</Button>
+            </DialogClose>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </>
-
   );
 };
 

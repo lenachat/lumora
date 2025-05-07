@@ -1,10 +1,20 @@
 import { useParams, Link } from 'react-router-dom';
+import { useState } from 'react';
 import { Card } from '../ui/card';
 import { Button } from '../ui/button';
 import { useNavigate } from 'react-router-dom';
 import { doc, updateDoc } from 'firebase/firestore';
 import { db } from '@/firebase';
 import Navigation from '../navigation/navigation-bar';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+  DialogClose,
+} from "@/components/ui/dialog";
 
 interface User {
   displayName: string;
@@ -25,6 +35,16 @@ interface SingleJournalEntryProps {
 }
 
 const SingleJournalEntry = ({ user, journalEntries, setJournalEntries }: SingleJournalEntryProps) => {
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [dialogMessage, setDialogMessage] = useState("");
+  const [shouldNavigate, setShouldNavigate] = useState(false);
+
+  const showDialog = (message: string) => {
+    setDialogMessage(message);
+    setIsDialogOpen(true);
+  };
+
   const navigate = useNavigate();
   const { index } = useParams<{ index: string }>();
   const entryIndex = parseInt(index ?? "0", 10);
@@ -46,11 +66,17 @@ const SingleJournalEntry = ({ user, journalEntries, setJournalEntries }: SingleJ
 
     try {
       // Update the Firestore document // Sort by created date in descending order
-      await updateDoc(userDocRef, { journalEntries: updatedJournalEntries.sort((a, b) => new Date(b.created).getTime() - new Date(a.created).getTime()) });
-      alert("Journal entry deleted successfully!");
-      navigate(`/journalEntries`);
+      await updateDoc(userDocRef, {
+        journalEntries: updatedJournalEntries.sort(
+          (a, b) => new Date(b.created).getTime() - new Date(a.created).getTime()
+        )
+      });
+      // navigate(`/journalEntries`);
       setJournalEntries(updatedJournalEntries); // Update the local state
+      setShouldNavigate(true);
+      showDialog("Journal entry deleted successfully!");
     } catch (error) {
+      showDialog("Error deleting journal entry. Please check your connection and try again.");
       console.error("Error deleting journal entry:", error);
     }
   };
@@ -59,7 +85,6 @@ const SingleJournalEntry = ({ user, journalEntries, setJournalEntries }: SingleJ
     <>
       <div className="flex flex-col ml-8 mr-8">
         <Navigation />
-
         <h2 className="p-2 place-self-center">Single journal entry</h2>
         <div>
           <Link to="/journalEntries">
@@ -84,13 +109,52 @@ const SingleJournalEntry = ({ user, journalEntries, setJournalEntries }: SingleJ
                   Edit
                 </Link>
               </Button>
-              <Button onClick={handleDeleteEntry} >
+              <Button onClick={() => setShowConfirmDialog(true)}>
                 Delete
               </Button>
             </div>
           </Card>
         </div>
       </div>
+      <Dialog open={isDialogOpen} onOpenChange={(open) => {
+        setIsDialogOpen(open);
+        if (!open && shouldNavigate) {
+          navigate(`/journalEntries`);
+        }
+      }}>
+        <Dialog open={showConfirmDialog} onOpenChange={setShowConfirmDialog}>
+          <DialogContent className="bg-background text-primary">
+            <DialogHeader>
+              <DialogTitle>Confirm Deletion</DialogTitle>
+              <DialogDescription>Are you sure you want to delete this entry? This action cannot be undone.</DialogDescription>
+            </DialogHeader>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setShowConfirmDialog(false)}>Cancel</Button>
+              <Button
+                variant="destructive"
+                onClick={() => {
+                  setShowConfirmDialog(false);
+                  handleDeleteEntry();
+                }}
+              >
+                Delete
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
+        <DialogContent className="bg-background text-primary">
+          <DialogHeader>
+            <DialogTitle>Notification</DialogTitle>
+            <DialogDescription>{dialogMessage}</DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <DialogClose asChild>
+              <Button onClick={() => setIsDialogOpen(false)}>OK</Button>
+            </DialogClose>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }

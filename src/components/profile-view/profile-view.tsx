@@ -6,6 +6,15 @@ import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { getAuth, verifyBeforeUpdateEmail, updatePassword, updateProfile, EmailAuthProvider, reauthenticateWithCredential } from "firebase/auth";
 import { getFirestore, doc, updateDoc, deleteDoc } from "firebase/firestore";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+  DialogClose,
+} from "@/components/ui/dialog";
 
 
 const ProfileView = () => {
@@ -18,6 +27,15 @@ const ProfileView = () => {
   const [newPassword, setNewPassword] = useState("");
   const [currentPassword, setCurrentPassword] = useState("");
   const [emailVerified] = useState(user?.emailVerified || false);
+
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [dialogMessage, setDialogMessage] = useState("");
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+
+  const showDialog = (message: string) => {
+    setDialogMessage(message);
+    setIsDialogOpen(true);
+  };
 
   useEffect(() => {
     if (user) {
@@ -46,7 +64,7 @@ const ProfileView = () => {
         // Update email
         if (email !== user.email) {
           await verifyBeforeUpdateEmail(user, email);
-          alert(
+          showDialog(
             "A verification email has been sent to your new address. Please verify it to complete the email change."
           );
         }
@@ -72,14 +90,14 @@ const ProfileView = () => {
         };
         localStorage.setItem("user", JSON.stringify(updatedUserData));
 
-        alert("Profile updated successfully!");
+        showDialog("Profile updated successfully!");
       } catch (error: unknown) {
         if (error instanceof Error) {
           console.error(error);
-          alert("Error updating profile: " + error.message);
+          showDialog("Error updating profile: " + error.message);
         } else {
           console.error("An unknown error occurred.");
-          alert("An unknown error occurred.");
+          showDialog("An unknown error occurred. Please try again.");
         }
       }
     }
@@ -87,12 +105,6 @@ const ProfileView = () => {
 
   const deleteAccount = async () => {
     if (!user) return;
-
-    const confirmed = window.confirm(
-      "Are you sure you want to delete your account? This action cannot be undone."
-    );
-
-    if (!confirmed) return;
 
     try {
       // Reauthenticate the user
@@ -107,17 +119,17 @@ const ProfileView = () => {
       // Delete user from Firebase Auth
       await user.delete();
 
-      alert("Your account has been deleted successfully.");
+      showDialog("Your account has been deleted successfully.");
       localStorage.removeItem("user");
       localStorage.removeItem("favoriteAffirmations");
       // Redirect to login or home page
-      window.location.href = "/"; // Or redirect to login/start page
+      window.location.href = "/";
     } catch (error: unknown) {
       if (error instanceof Error) {
         console.error("Error deleting account:", error);
-        alert("Error deleting account: " + error.message);
+        showDialog("An error occurred while deleting your account. Please check your connection and try again.");
       } else {
-        alert("An unknown error occurred.");
+        showDialog("An unknown error occurred.");
       }
     }
   };
@@ -204,9 +216,7 @@ const ProfileView = () => {
                 className="text-primary border-none"
               />
               <div className="mt-4">
-                <p>Are you sure you want to delete your account?</p>
-                <p>This action can not be undone.</p>
-                <Button onClick={deleteAccount} className="border-warning hover:bg-warning">
+                <Button onClick={() => setIsDeleteDialogOpen(true)} className="border-warning hover:bg-warning">
                   Delete my account
                 </Button>
               </div>
@@ -214,8 +224,38 @@ const ProfileView = () => {
           </Card>
         </div>
       </div>
+      <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+        <DialogContent className="bg-background text-primary rounded-xl">
+          <DialogHeader>
+            <DialogTitle>Confirm Deletion</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to delete your account? This action cannot be undone.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button onClick={() => setIsDeleteDialogOpen(false)} variant="secondary">
+              Cancel
+            </Button>
+            <Button onClick={deleteAccount} className="border-warning hover:bg-warning">
+              Yes, delete
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <DialogContent className="bg-background text-primary rounded-xl">
+          <DialogHeader>
+            <DialogTitle>Notification</DialogTitle>
+            <DialogDescription>{dialogMessage}</DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <DialogClose asChild>
+              <Button onClick={() => setIsDialogOpen(false)}>OK</Button>
+            </DialogClose>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </>
-
   );
 }
 
