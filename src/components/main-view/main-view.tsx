@@ -10,6 +10,7 @@ import SingleJournalEntry from '../single-journal-entry/single-journal-entry';
 import UpdateJournalEntry from '../update-journal-entry/update-journal-entry';
 import ProfileView from '../profile-view/profile-view';
 import AllFavoriteAffirmations from '../all-favorite-affirmations/all-favorite-affirmations';
+import ResetPassword from '../reset-password/reset-password';
 
 interface User {
   uid: string;
@@ -146,6 +147,7 @@ const MainView = () => {
         <Route path='/journalEntries/:index/edit' element={user ? <UpdateJournalEntry journalEntries={journalEntries} userId={user.uid} setJournalEntries={setJournalEntries} /> : <Navigate to="/login" />} />
         <Route path='/profile' element={user ? <ProfileView /> : <Navigate to="/login" />} />
         <Route path='/favoriteAffirmations' element={user ? <AllFavoriteAffirmations favoriteAffirmations={favoriteAffirmations} setFavoriteAffirmations={setFavoriteAffirmations} /> : <Navigate to="/login" />} />
+        <Route path='/reset-password' element={user ? <Navigate to="/" /> : <ResetPassword />} />
       </Routes>
     </BrowserRouter>
   );

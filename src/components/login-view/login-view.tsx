@@ -8,6 +8,7 @@ import { Input } from "../ui/input";
 import { db } from "../../firebase";
 import { collection, query, where, getDocs } from "firebase/firestore";
 import { FirebaseError } from "firebase/app";
+import { Link } from "react-router-dom";
 import {
   Dialog,
   DialogContent,
@@ -98,6 +99,11 @@ const LoginView = () => {
                 </p>
               </div>
             </form>
+            <div className="flex justify-center mt-2">
+              <Link to="/reset-password" className="text-sm text-blue-500 hover:underline">
+                Forgot your password?
+              </Link>
+            </div>
           </CardContent>
         </Card>
       </div>
