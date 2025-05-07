@@ -28,14 +28,16 @@ const DailyAffirmation = ({ favoriteAffirmations, setFavoriteAffirmations }: Dai
       // Fetch data from the proxied affirmations API
       const fetchAffirmation = async () => {
         try {
-          const response = await fetch("/api/");
+          const response = await fetch("/affirmations.json");
           if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
           }
-          const data: { affirmation: string } = await response.json();
-          setAffirmation(data.affirmation);
+          const data: string[] = await response.json();
+          const randomAffirmation = data[Math.floor(Math.random() * data.length)]; // Pick a random affirmation
+          setAffirmation(randomAffirmation);
+          console.log("Fetched affirmation:", randomAffirmation);
 
-          localStorage.setItem("dailyAffirmation", data.affirmation);
+          localStorage.setItem("dailyAffirmation", randomAffirmation);
           localStorage.setItem("affirmationDate", today);
         } catch (error) {
           console.error("Error fetching affirmation:", error);
@@ -92,7 +94,7 @@ const DailyAffirmation = ({ favoriteAffirmations, setFavoriteAffirmations }: Dai
     <>
       <div className="place-items-center pt-3">
         <h2 className="mt-2 mb-2 font-thin">Daily Affirmation</h2>
-        <p className="text-lg">{affirmation}.</p>
+        <p className="text-lg">{affirmation}</p>
       </div>
       <div className="flex justify-end m-2">
         <Button onClick={toggleFavorite} className="m-2 border-none hover:bg-base">
