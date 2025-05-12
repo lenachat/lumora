@@ -26,9 +26,9 @@ const ResetPassword = () => {
   };
 
   return (
-    <div className="flex flex-col ml-5 mr-5">
+    <div className="flex flex-col md:ml-5 md:mr-5">
       <Navigation />
-      <div className="w-1/3 m-auto mt-20">
+      <div className="w-10/12 sm:w-1/2 md:w-1/3 mx-auto mt-20">
         <h2 className="text-primary text-xl font-semibold mb-4">Reset Password</h2>
         <Input
           type="email"
@@ -38,7 +38,7 @@ const ResetPassword = () => {
           className="mb-2 text-primary"
         />
         <Button onClick={handleReset} className="mt-4 bg-base text-primary hover:bg-background hover:border-base">
-          Send Reset Email
+          Send reset Email
         </Button>
         <Dialog open={isDialogOpen} onOpenChange={(open) => setIsDialogOpen(open)}>
           <DialogContent className="bg-background text-primary">

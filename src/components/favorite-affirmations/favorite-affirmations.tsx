@@ -16,7 +16,7 @@ const FavoriteAffirmations = ({ favoriteAffirmations }: FavoriteAffirmationsProp
             <Link to={`/favoriteAffirmations`}>
               <Card
                 key={index}
-                className="p-2 m-1 mt-2 md:p-4 md:m-2 rounded-[25px] transition-transform duration-300 ease-in-out transform hover:scale-x-105 hover:shadow-md"
+                className="p-2 m-1 mt-2 md:p-4 md:m-2 rounded-2xl md:rounded-[25px] transition-transform duration-300 ease-in-out transform hover:scale-x-105 hover:shadow-md"
               >
                 <li className="pl-2 pr-2 pt-1 pb-1">
                   {fav.affirmation}

@@ -111,7 +111,7 @@ const UpdateJournalEntry = ({ journalEntries, userId, setJournalEntries }: Updat
               </Button>
             </Link>
           </div>
-          <Card className="md:p-4 p-4 mb-4 mt-4 w-10/12 md:w-1/2 mx-auto border-none rounded-[35px]">
+          <Card className="md:p-4 p-4 mb-4 mt-4 w-10/12 md:w-1/2 mx-auto border-none rounded-[25px]">
             <h1 className='m-3'>Update your entry here:</h1>
             <form onSubmit={handleUpdateEntry} className="pl-3 pr-3 pb-3">
               <label htmlFor="title"></label>

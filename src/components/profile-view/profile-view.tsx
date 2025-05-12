@@ -155,7 +155,7 @@ const ProfileView = () => {
               </Button>
             </Link>
           </div>
-          <Card className="p-3 mb-4 md:mb-6 mt-4 w-10/12 md:w-1/2 mx-auto border-none rounded-[35px]">
+          <Card className="p-3 mb-4 md:mb-6 mt-4 w-10/12 md:w-1/2 mx-auto border-none rounded-[25px]">
             <CardHeader className="font-semibold">User Information</CardHeader>
             <CardContent>
               <p><strong>Username:</strong> {user?.displayName}</p>
@@ -169,7 +169,7 @@ const ProfileView = () => {
 
             <CardHeader className="font-semibold">Update Profile</CardHeader>
             <CardContent>
-              <form onSubmit={saveUserData} className="w-full md:w-1/3">
+              <form onSubmit={saveUserData} className="w-full md:w-1/2">
                 <p>Username:</p>
                 <Input
                   type="text"
@@ -221,7 +221,7 @@ const ProfileView = () => {
                 onChange={(e) => setCurrentPassword(e.target.value)}
                 placeholder="Enter password"
                 required
-                className="text-primary border-none"
+                className="text-primary border-none md:w-1/2"
               />
               <div className="mt-4">
                 <Button onClick={() => setIsDeleteDialogOpen(true)} className="border-warning hover:bg-warning">

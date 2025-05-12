@@ -85,7 +85,7 @@ const SignupView = () => {
       <div className="flex flex-col md:ml-8 md:mr-8">
         <Navigation />
 
-        <Card className="m-4 md:pl-10 md:pr-10 md:w-1/3 place-self-center border-none rounded-[35px]">
+        <Card className="m-4 md:pl-10 md:pr-10 md:w-1/3 place-self-center border-none rounded-[25px]">
           <CardHeader className="text-center">Signup</CardHeader>
           <CardContent>
             <form onSubmit={handleSignup}>

@@ -24,7 +24,7 @@ const JournalEntriesView = ({ journalEntries }: JournalEntriesList) => {
             .slice(0, 4)
             .map((entry, index) => ( // Show only the last 4 entries
               <Link to={`/journalEntries/${index}`}>
-                <Card key={index} className="p-2 m-1 mt-2 md:p-4 md:m-2 rounded-[25px] transition-transform duration-300 ease-in-out transform hover:scale-x-105 hover:shadow-md">
+                <Card key={index} className="p-2 m-1 mt-2 md:p-4 md:m-2 rounded-2xl md:rounded-[25px] transition-transform duration-300 ease-in-out transform hover:scale-x-105 hover:shadow-md">
                   <div className="flex justify-end">
                     <p className='text-right text-light text-sm font-thin p-1 mr-1 md:mr-3'>
                       {entry.created.toLocaleDateString()}
