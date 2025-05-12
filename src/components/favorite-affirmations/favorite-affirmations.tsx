@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Card } from "../ui/card";
 import { Link } from "react-router-dom";
 
@@ -7,37 +6,22 @@ interface FavoriteAffirmationsProps {
 }
 
 const FavoriteAffirmations = ({ favoriteAffirmations }: FavoriteAffirmationsProps) => {
-  // const favoriteAffirmations = JSON.parse(localStorage.getItem("favoriteAffirmations") || "[]");
-  const [expandedIndexes, setExpandedIndexes] = useState<number[]>([]);
-
-  const toggleExpand = (index: number) => {
-    setExpandedIndexes((prev) =>
-      prev.includes(index) ? prev.filter((i) => i !== index) : [...prev, index]
-    );
-  };
 
   return (
-    <div className="">
-      <h2 className="mb-3 mt-6 place-self-center">Fav Affirmations</h2>
-      <ul className="grid grid-cols-1">
+    <div>
+      <h2 className="mt-3 mb-1 md:mb-3 md:mt-6 place-self-center text-center">Fav Affirmations</h2>
+      <ul>
         {favoriteAffirmations.slice(0, 4).map((fav: { affirmation: string }, index: number) => {
-          const isExpanded = expandedIndexes.includes(index);
           return (
             <Link to={`/favoriteAffirmations`}>
-            <Card
-              key={index}
-              onClick={() => toggleExpand(index)}
-              className="p-4 m-2 rounded-[25px] transition-transform duration-300 ease-in-out transform hover:scale-x-105 hover:shadow-md"
-            >
-              <li className="mt-1 mb-2 ml-3 mr-3">
-                <span className={isExpanded ? "hidden" : "block truncate"}>
+              <Card
+                key={index}
+                className="p-2 m-1 mt-2 md:p-4 md:m-2 rounded-[25px] transition-transform duration-300 ease-in-out transform hover:scale-x-105 hover:shadow-md"
+              >
+                <li className="pl-2 pr-2 pt-1 pb-1">
                   {fav.affirmation}
-                </span>
-                <span className={isExpanded ? "block" : "hidden"}>
-                  {fav.affirmation}
-                </span>
-              </li>
-            </Card>
+                </li>
+              </Card>
             </Link>
           );
         })}

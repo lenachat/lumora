@@ -42,14 +42,14 @@ const Dashboard = ({ user, journalEntries, setJournalEntries, streak, calculateS
 
   return (
     <>
-      <div className="min-h-screen flex flex-col items-center ml-8 mr-8">
+      <div className="min-h-screen flex flex-col items-center ml-3 mr-3 pb-3 md:ml-8 md:mr-8 md:pb-8">
         <Navigation />
 
         <h1 className="p-4 text-center text-dark">Good to have you{user.displayName ? ", " + user.displayName : ""}!</h1>
 
-        <div className="m-4 grid grid-rows-5 grid-cols-2 gap-6 w-full max-w-7xl grow">
+        <div className="md:m-4 grid grid-rows-5 grid-cols-2 gap-3 md:gap-6 w-full max-w-7xl grow">
           <div className="row-span-1 col-span-2">
-            <Card className=" p-4 border-none h-full w-full rounded-[35px]">
+            <Card className="p-4 border-none h-full w-full rounded-[35px]">
               <DailyAffirmation
                 favoriteAffirmations={favoriteAffirmations}
                 setFavoriteAffirmations={setFavoriteAffirmations}
@@ -58,13 +58,13 @@ const Dashboard = ({ user, journalEntries, setJournalEntries, streak, calculateS
           </div>
 
           <div className="row-span-1 col-span-1">
-            <Card className="p-4 basis-1/2 border-none h-full rounded-[35px]">
+            <Card className="p-2 md:p-4 basis-1/2 border-none h-full w-full rounded-[35px]">
               <JournalStreak streak={streak} />
             </Card>
           </div>
 
           <div className="row-span-2 col-span-1">
-            <Card className="p-4 basis-1/2 border-none h-full w-full rounded-[35px]">
+            <Card className="p-2 md:p-4 basis-1/2 border-none h-full w-full rounded-[35px]">
               <JournalEntryForm
                 user={user}
                 journalEntries={journalEntries}
@@ -76,14 +76,14 @@ const Dashboard = ({ user, journalEntries, setJournalEntries, streak, calculateS
 
           <div className="row-span-3 col-span-1">
             <Link to="/journalEntries">
-              <Card className="p-4 basis-1/2 border-none h-full w-full rounded-[35px]">
+              <Card className="p-2 md:p-4 basis-1/2 border-none h-full w-full rounded-[35px]">
                 <JournalEntriesView journalEntries={journalEntries} />
               </Card>
             </Link>
           </div>
 
           <div className="row-span-2 col-span-1">
-            <Card className="p-4 basis-1/2 border-none h-full w-full rounded-[35px]">
+            <Card className="p-2 md:p-4 basis-1/2 border-none h-full w-full rounded-[35px]">
               <FavoriteAffirmations
                 favoriteAffirmations={favoriteAffirmations}
               />

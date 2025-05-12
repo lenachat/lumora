@@ -18,9 +18,9 @@ const Navigation = () => {
 
   return (
     <NavigationMenu >
-      <NavigationMenuList className="w-[100vw] pl-4 pr-4">
+      <NavigationMenuList className="w-[100vw] md:pl-4 md:pr-4">
         <div className="p-4 flex w-full items-center justify-between">
-          <div className="">
+          <div className="pl-4">
             <Link to="/">
               <img src="/lumora-logo-light.png" alt="" className="h-20" />
             </Link>
@@ -29,7 +29,7 @@ const Navigation = () => {
           {!user ? (
             <>
               {location.pathname === '/signup' ? (
-                <div className="w-32 flex-1 place-items-end">
+                <div className="flex place-items-end">
                   <NavigationMenuItem>
                     <Link to="/login">
                       <Button className="border-none">Login</Button>
@@ -37,7 +37,7 @@ const Navigation = () => {
                   </NavigationMenuItem>
                 </div>
               ) : (
-                <div className="w-32 flex-1 place-items-end">
+                <div className="flex place-items-end">
                   <NavigationMenuItem>
                     <Link to="/signup">
                       <Button className="border-none">Signup</Button>

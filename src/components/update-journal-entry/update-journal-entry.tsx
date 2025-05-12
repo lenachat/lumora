@@ -92,21 +92,28 @@ const UpdateJournalEntry = ({ journalEntries, userId, setJournalEntries }: Updat
 
   return (
     <>
-      <div className="flex flex-col ml-8 mr-8">
+      <div className="flex flex-col md:ml-8 md:mr-8">
         <Navigation />
-
-        <h2 className="p-2 text-center">Update Entry</h2>
-
-        <div>
+        <div className="md:hidden flex items-center">
           <Link to={`/journalEntries/${index}`}>
-            <Button className='m-4 p-4 float-start'>
-              <img src="/back.svg" alt="" className="w-8 h-8" />
+            <Button className='ml-4 mt-1 md:p-4 float-start border-none'>
+              <img src="/back.svg" alt="Back button" className="w-8 h-8" />
             </Button>
           </Link>
-
-          <Card className="p-4 mb-6 mt-4 w-1/2 place-self-center border-none rounded-[35px]">
-            <h1 className='p-4'>Update your entry here:</h1>
-            <form onSubmit={handleUpdateEntry} className="p-4">
+          <h2 className="p-2 absolute left-1/2 transform -translate-x-1/2 text-center">Update Entry</h2>
+        </div>
+        <div>
+          <div className="hidden md:block">
+            <h2 className="p-2 place-self-center">Update Entry</h2>
+            <Link to={`/journalEntries/${index}`}>
+              <Button className='ml-4 mt-1 md:p-4 float-start border-none'>
+                <img src="/back.svg" alt="Back button" className="w-8 h-8" />
+              </Button>
+            </Link>
+          </div>
+          <Card className="md:p-4 p-4 mb-4 mt-4 w-10/12 md:w-1/2 mx-auto border-none rounded-[35px]">
+            <h1 className='m-3'>Update your entry here:</h1>
+            <form onSubmit={handleUpdateEntry} className="pl-3 pr-3 pb-3">
               <label htmlFor="title"></label>
               <Input
                 id="title"
@@ -115,7 +122,6 @@ const UpdateJournalEntry = ({ journalEntries, userId, setJournalEntries }: Updat
                 value={updatedTitle}
                 onChange={(e) => setUpdatedTitle(e.target.value)}
                 className="mb-2 text-primary border-none"
-                required
               />
               <label htmlFor="entry"></label>
               <textarea id="entry" name="entry" rows={10} cols={50} value={updatedEntry}

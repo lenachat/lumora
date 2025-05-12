@@ -39,21 +39,31 @@ const AllFavoriteAffirmations = ({
 
   return (
     <>
-      <div className="flex flex-col ml-8 mr-8">
+      <div className="flex flex-col md:ml-8 md:mr-8">
         <Navigation />
-        <h2 className="p-2 place-self-center">Your favorite Affirmations</h2>
-
-        <div>
+        <div className="md:hidden flex items-center">
           <Link to="/">
-            <Button className="m-4 p-4 float-start">
-              <img src="/back.svg" alt="" className="w-8 h-8" />
+            <Button className='ml-4 mt-1 md:p-4 float-start border-none'>
+              <img src="/back.svg" alt="Back button" className="w-8 h-8" />
             </Button>
           </Link>
+          <h2 className="p-2 absolute left-1/2 transform -translate-x-1/2 text-center">My favorite Affirmations</h2>
+        </div>
+
+        <div>
+          <div className="hidden md:block">
+            <h2 className="p-2 place-self-center">My favorite Affirmations</h2>
+            <Link to="/">
+              <Button className='ml-4 mt-1 md:p-4 float-start border-none'>
+                <img src="/back.svg" alt="Back button" className="w-8 h-8" />
+              </Button>
+            </Link>
+          </div>
 
           {favoriteAffirmations.map((affirmation) => (
             <Card
               key={affirmation.id}
-              className="p-6 mb-6 rounded-[25px] mt-4 w-1/2 place-self-center border-none relative">
+              className="p-4 mb-4 md:mb-6 rounded-[25px] mt-4 w-10/12 md:w-1/2 mx-auto border-none relative">
               <p className="line-clamp-3 ml-3 mr-3 mb-2">{affirmation.affirmation}</p>
               <div className="flex justify-end">
                 <Button

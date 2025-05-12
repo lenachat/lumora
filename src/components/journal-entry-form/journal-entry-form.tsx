@@ -80,11 +80,11 @@ const JournalEntryForm = (
   return (
     <>
       <div >
-        <h1 className="text-center mb-3 mt-6 text-primary">New Journal Entry</h1>
+        <h1 className="mt-3 mb-1 text-center md:mb-3 md:mt-6 text-primary">Write a new entry</h1>
       </div>
       <div className='w-full flex justify-center'>
-        <div className="w-[80%] max-w-md">
-          <form onSubmit={handleSaveEntry} className='w-full '>
+        <div className="p-1 md:w-[80%] max-w-md">
+          <form onSubmit={handleSaveEntry} className='w-full flex flex-col'>
             <Input
               type="text"
               id="journalTitle"
@@ -98,9 +98,9 @@ const JournalEntryForm = (
               onChange={(e) => setJournalEntry(e.target.value)}
               placeholder="Today I am grateful for..."
               rows={8}
-              className="w-full p-3 mb-2 text-sm resize-none rounded-xl bg-background text-primary focus:outline-none placeholder:text-base placeholder:text-md"
+              className="w-full p-3 mb-1 text-sm resize-none rounded-xl bg-background text-primary focus:outline-none placeholder:text-base placeholder:text-md"
             />
-            <Button type="submit">Save</Button>
+            <Button type="submit" className="mb-2 place-self-end">Save</Button>
           </form>
         </div>
       </div>

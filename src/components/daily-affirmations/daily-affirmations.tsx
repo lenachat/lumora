@@ -93,12 +93,12 @@ const DailyAffirmation = ({ favoriteAffirmations, setFavoriteAffirmations }: Dai
   return (
     <>
       <div className="place-items-center pt-3">
-        <h2 className="mt-2 mb-2 font-thin">Daily Affirmation</h2>
-        <p className="text-lg">{affirmation}</p>
+        <h2 className="mt-2 mb-2 font-thin text-center">Daily Affirmation</h2>
+        <p className="text-lg text-center">{affirmation}</p>
       </div>
-      <div className="flex justify-end m-2">
-        <Button onClick={toggleFavorite} className="m-2 border-none hover:bg-base">
-          {isFavorite ? <img src="/heart-filled.svg" className="w-6 h-6" /> : <img src="/heart.svg" className="w-6 h-6" />}
+      <div className="flex justify-end m-2 h-8">
+        <Button onClick={toggleFavorite} className="border-none hover:bg-base">
+          {isFavorite ? <img src="/heart-filled.svg" className="w-6 h-6" /> : <img src="/heart.svg" className="w-6 h-6"/>}
         </Button>
       </div>
     </>
