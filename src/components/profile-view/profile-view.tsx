@@ -155,7 +155,7 @@ const ProfileView = () => {
               </Button>
             </Link>
           </div>
-          <Card className="p-3 mb-4 md:mb-6 mt-4 w-10/12 md:w-1/2 mx-auto border-none rounded-[25px]">
+          <Card className="p-3 mb-4 md:mb-6 mt-4 w-11/12 md:w-1/2 mx-auto border-none rounded-[25px]">
             <CardHeader className="font-semibold">User Information</CardHeader>
             <CardContent>
               <p><strong>Username:</strong> {user?.displayName}</p>

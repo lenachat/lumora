@@ -7,7 +7,8 @@ import FavoriteAffirmations from "../favorite-affirmations/favorite-affirmations
 import { Card } from "../ui/card";
 import "./dashboard.css";
 import { Link } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { Button } from "../ui/button";
 
 interface User {
   displayName: string;
@@ -33,12 +34,23 @@ interface DashboardProps {
 
 const Dashboard = ({ user, journalEntries, setJournalEntries, streak, calculateStreak, setStreak, favoriteAffirmations,
   setFavoriteAffirmations }: DashboardProps) => {
-  // const [favoriteAffirmations, setFavoriteAffirmations] = useState<{ id: string; affirmation: string }[]>([]);
+  const [isTyping, setIsTyping] = useState(false);
 
   useEffect(() => {
     const stored = JSON.parse(localStorage.getItem("favoriteAffirmations") || "[]");
     setFavoriteAffirmations(stored);
   }, []);
+
+  useEffect(() => {
+    if (isTyping) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isTyping]);
 
   return (
     <>
@@ -63,8 +75,8 @@ const Dashboard = ({ user, journalEntries, setJournalEntries, streak, calculateS
             </Card>
           </div>
 
-          <div className="row-span-2 col-span-1">
-            <Card className="p-2 md:p-4 basis-1/2 border-none h-full w-full rounded-[35px]">
+          <div className="hidden md:block row-span-2 col-span-1">
+            <Card className="p-2 basis-1/2 border-none h-full w-full rounded-[35px]">
               <JournalEntryForm
                 user={user}
                 journalEntries={journalEntries}
@@ -74,7 +86,16 @@ const Dashboard = ({ user, journalEntries, setJournalEntries, streak, calculateS
             </Card>
           </div>
 
-          <div className="row-span-3 col-span-1">
+          <div className="md:hidden row-span-1 col-span-1 h-full w-full">
+            <div onClick={() => setIsTyping(true)} className="h-full w-full">
+              <Card className="p-2 basis-1/2 border-none h-full w-full rounded-[35px]">
+                <p className="mb-3 mt-6 pl-2 pr-2 text-center">Write a journal Entry</p>
+                <p className="font-semibold mt-8 mb-1 pl-2 pr-2 md:mb-3 md:mt-6 text-center">Start writing</p>
+              </Card>
+            </div>
+          </div>
+
+          <div className="row-span-3 col-span-2 md:row-span-3 md:col-span-1">
             <Link to="/journalEntries">
               <Card className="p-2 md:p-4 basis-1/2 border-none h-full w-full rounded-[35px]">
                 <JournalEntriesView journalEntries={journalEntries} />
@@ -82,7 +103,7 @@ const Dashboard = ({ user, journalEntries, setJournalEntries, streak, calculateS
             </Link>
           </div>
 
-          <div className="row-span-2 col-span-1">
+          <div className="row-span-2 col-span-2 md:row-span-2 md:col-span-1">
             <Card className="p-2 md:p-4 basis-1/2 border-none h-full w-full rounded-[35px]">
               <FavoriteAffirmations
                 favoriteAffirmations={favoriteAffirmations}
@@ -91,6 +112,37 @@ const Dashboard = ({ user, journalEntries, setJournalEntries, streak, calculateS
           </div>
 
         </div>
+
+        {isTyping && (
+          <div
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm transition-opacity duration-300 ease-in-out"
+          >
+            <div
+              className="animate-fade-in-up w-full max-w-3xl p-6"
+            >
+              <Card className="rounded-[35px] shadow-lg transition-transform duration-300 ease-in-out transform scale-95">
+                <div className="flex justify-end mt-4">
+                  <Button
+                    onClick={() => setIsTyping(false)}
+                    className="text-sm text-gray-500 hover:text-primary transition mr-3 border-none"
+                  >
+                    X
+                  </Button>
+                </div>
+                <JournalEntryForm
+                  user={user}
+                  journalEntries={journalEntries}
+                  setJournalEntries={(entries) => {
+                    setJournalEntries(entries);
+                    setIsTyping(false);
+                  }}
+                  setStreak={setStreak}
+                  calculateStreak={calculateStreak}
+                />
+              </Card>
+            </div>
+          </div>
+        )}
       </div>
     </>
   );

@@ -51,7 +51,7 @@ const AllJournalEntries = ({ journalEntries }: JournalEntriesList) => {
                       </p>
                     </div>
                     <h3 className='text-xl mt-1 mb-2 ml-3 mr-3'>{entry.title}</h3>
-                    <p className='line-clamp ml-3 mr-3 mb-2'>{entry.entry}</p>
+                    <p className='line-clamp ml-3 mr-3 mb-2 whitespace-pre-wrap'>{entry.entry}</p>
                   </Link>
                 </Card>
               </div>

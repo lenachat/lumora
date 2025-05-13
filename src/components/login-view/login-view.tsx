@@ -120,6 +120,11 @@ const LoginView = () => {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+      <div className="fixed bottom-0 left-0 right-0 bg-background border-t border-gray-100">
+        <footer className="flex justify-center items-center p-4">
+          <p className="text-xs text-gray-400">&copy; 2025 Lena Chatziastros</p>
+        </footer>
+      </div>
     </>
   );
 };

@@ -93,7 +93,7 @@ const DailyAffirmation = ({ favoriteAffirmations, setFavoriteAffirmations }: Dai
   return (
     <>
       <div className="place-items-center pt-3">
-        <h2 className="mt-2 mb-2 font-thin text-center">Daily Affirmation</h2>
+        <h2 className="mt-4 md:mt-6 mb-2 font-thin text-center">Daily Affirmation</h2>
         <p className="text-lg text-center">{affirmation}</p>
       </div>
       <div className="flex justify-end m-2 h-8">

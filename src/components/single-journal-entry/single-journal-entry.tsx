@@ -112,7 +112,7 @@ const SingleJournalEntry = ({ user, journalEntries, setJournalEntries }: SingleJ
               </p>
             </div>
             <h3 className='text-xl mt-1 mb-2 ml-3 mr-3'>{entry.title}</h3>
-            <p className='ml-3 mr-3 mb-2'>{entry.entry}</p>
+            <p className='ml-3 mr-3 mb-2 whitespace-pre-wrap'>{entry.entry}</p>
             <div className="flex flex-row ml-3 mr-3 justify-between">
               <Button>
                 <Link to={`/journalEntries/${index}/edit`}>

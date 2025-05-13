@@ -79,25 +79,29 @@ const JournalEntryForm = (
 
   return (
     <>
-      <div >
-        <h1 className="mt-3 mb-1 text-center md:mb-3 md:mt-6 text-primary">Write a new entry</h1>
+      <div>
+        <h1 className="mb-1 text-center md:mb-3 md:mt-6 text-primary">Write a new entry</h1>
       </div>
       <div className='w-full flex justify-center'>
-        <div className="p-1 md:w-[80%] max-w-md">
+        <div className="p-4 w-[90%] max-w-md">
           <form onSubmit={handleSaveEntry} className='w-full flex flex-col'>
             <Input
               type="text"
               id="journalTitle"
               value={journalTitle}
-              onChange={(e) => setJournalTitle(e.target.value)}
+              onChange={(e) => {
+                setJournalTitle(e.target.value);
+              }}
               placeholder="Journal Title"
               className="mb-2 text-primary border-none"
             />
             <textarea
               value={journalEntry}
-              onChange={(e) => setJournalEntry(e.target.value)}
+              onChange={(e) => {
+                setJournalEntry(e.target.value);
+              }}
               placeholder="Today I am grateful for..."
-              rows={8}
+              rows={9}
               className="w-full p-3 mb-1 text-sm resize-none rounded-xl bg-background text-primary focus:outline-none placeholder:text-base placeholder:text-md"
             />
             <Button type="submit" className="mb-2 place-self-end">Save</Button>
