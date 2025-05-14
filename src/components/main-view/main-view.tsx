@@ -11,11 +11,16 @@ import UpdateJournalEntry from '../update-journal-entry/update-journal-entry';
 import ProfileView from '../profile-view/profile-view';
 import AllFavoriteAffirmations from '../all-favorite-affirmations/all-favorite-affirmations';
 import ResetPassword from '../reset-password/reset-password';
+import { useDispatch } from 'react-redux';
+import { setStreak } from '../../state/streak/streakSlice';
+import { setUser } from '../../state/user/userSlice';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../state/store';
 
-interface User {
-  uid: string;
-  displayName: string;
-}
+// interface User {
+//   uid: string;
+//   displayName: string;
+// }
 
 interface JournalEntry {
   title: string;
@@ -24,26 +29,35 @@ interface JournalEntry {
   updated: Date;
 }
 
-
-
 const MainView = () => {
-  const [user, setUser] = useState<User | null>(null);
-  const [journalEntries, setJournalEntries] = useState<JournalEntry[]>([]);
-  const [streak, setStreak] = useState<number>(0);
-  const [favoriteAffirmations, setFavoriteAffirmations] = useState<{ id: string; affirmation: string }[]>([]);
+  const user = useSelector((state: RootState) => state.user);
 
+  const userId = user?.uid;
+
+  // const [user, setUser] = useState<User | null>(null);
+  const [journalEntries, setJournalEntries] = useState<JournalEntry[]>([]);
+  // const [streak, setStreak] = useState<number>(0);
+  // const [favoriteAffirmations, setFavoriteAffirmations] = useState<{ id: string; affirmation: string }[]>([]);
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const user = localStorage.getItem('user');
     if (user) {
-      setUser(JSON.parse(user));
+      dispatch(setUser(JSON.parse(user)));
     }
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     const fetchJournalEntries = async () => {
+
+      if (!userId) {
+        console.error('User ID is not available.');
+        return;
+      }
+
       try {
-        if (user) {
+        if (user?.uid) {
           const userDocRef = doc(db, 'users', user.uid);
           const userDoc = await getDoc(userDocRef);
 
@@ -65,7 +79,7 @@ const MainView = () => {
     };
 
     fetchJournalEntries();
-  }, [user]);
+  }, [userId, user]);
 
   // Streak calculation
   const calculateStreak = (dates: Date[]): number => {
@@ -105,7 +119,9 @@ const MainView = () => {
     if (user) {
       const createdDates = journalEntries.map(entry => entry.created);
       const streakCalculated = calculateStreak(createdDates);
-      setStreak(streakCalculated);
+
+      // setStreak(streakCalculated);
+      dispatch(setStreak(streakCalculated)); // Update the streak in the Redux store
     }
   }, [user, journalEntries]);
 
@@ -114,16 +130,14 @@ const MainView = () => {
       <Routes>
         <Route path="/" element={
           <>
-            {user ? (
+            {userId ? (
               <Dashboard
-                user={user}
+                // user={user}
                 journalEntries={journalEntries}
                 setJournalEntries={setJournalEntries}
-                streak={streak}
-                setStreak={setStreak}
                 calculateStreak={calculateStreak}
-                favoriteAffirmations={favoriteAffirmations}
-                setFavoriteAffirmations={setFavoriteAffirmations}
+              // favoriteAffirmations={favoriteAffirmations}
+              // setFavoriteAffirmations={setFavoriteAffirmations}
               />
             ) : (<Navigate to="/login" />)}
           </>
@@ -132,22 +146,22 @@ const MainView = () => {
         </Route>
         <Route path="/login" element={
           <>
-            {user ? (<Navigate to="/" />) : <LoginView />}
+            {userId ? (<Navigate to="/" />) : <LoginView />}
           </>
         }
         />
         <Route path="/signup" element={
           <>
-            {user ? (<Navigate to="/" />) : <SignupView />}
+            {userId ? (<Navigate to="/" />) : <SignupView />}
           </>
         }
         />
-        <Route path='/journalEntries' element={user ? <AllJournalEntries journalEntries={journalEntries} /> : <Navigate to="/login" />} />
-        <Route path='/journalEntries/:index' element={user ? <SingleJournalEntry user={user} journalEntries={journalEntries} setJournalEntries={setJournalEntries} /> : <Navigate to="/login" />} />
-        <Route path='/journalEntries/:index/edit' element={user ? <UpdateJournalEntry journalEntries={journalEntries} userId={user.uid} setJournalEntries={setJournalEntries} /> : <Navigate to="/login" />} />
-        <Route path='/profile' element={user ? <ProfileView /> : <Navigate to="/login" />} />
-        <Route path='/favoriteAffirmations' element={user ? <AllFavoriteAffirmations favoriteAffirmations={favoriteAffirmations} setFavoriteAffirmations={setFavoriteAffirmations} /> : <Navigate to="/login" />} />
-        <Route path='/reset-password' element={user ? <Navigate to="/" /> : <ResetPassword />} />
+        <Route path='/journalEntries' element={userId ? <AllJournalEntries journalEntries={journalEntries} /> : <Navigate to="/login" />} />
+        <Route path='/journalEntries/:index' element={userId ? <SingleJournalEntry journalEntries={journalEntries} setJournalEntries={setJournalEntries} /> : <Navigate to="/login" />} />
+        <Route path='/journalEntries/:index/edit' element={userId ? <UpdateJournalEntry journalEntries={journalEntries} setJournalEntries={setJournalEntries} /> : <Navigate to="/login" />} />
+        <Route path='/profile' element={userId ? <ProfileView /> : <Navigate to="/login" />} />
+        <Route path='/favoriteAffirmations' element={userId ? <AllFavoriteAffirmations /> : <Navigate to="/login" />} />
+        <Route path='/reset-password' element={userId ? <Navigate to="/" /> : <ResetPassword />} />
       </Routes>
     </BrowserRouter>
   );

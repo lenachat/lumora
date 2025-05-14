@@ -4,18 +4,25 @@ import { Link } from "react-router-dom";
 import Navigation from "../navigation/navigation-bar";
 import { db } from "../../firebase";
 import { doc, updateDoc, arrayRemove } from "firebase/firestore";
+import { useDispatch } from "react-redux";
+import { setFavoriteAffirmations } from "../../state/favoriteAffirmations/favoriteAffirmationsSlice";
+import { useSelector } from "react-redux";
+import { RootState } from "../../state/store";
 
-interface FavoriteAffirmationsProps {
-  favoriteAffirmations: { id: string; affirmation: string }[];
-  setFavoriteAffirmations: (favs: { id: string; affirmation: string }[]) => void;
-}
+// interface FavoriteAffirmationsProps {
+//   favoriteAffirmations: { id: string; affirmation: string }[];
+//   setFavoriteAffirmations: (favs: { id: string; affirmation: string }[]) => void;
+// }
 
-const AllFavoriteAffirmations = ({
-  favoriteAffirmations,
-  setFavoriteAffirmations,
-}: FavoriteAffirmationsProps) => {
+const AllFavoriteAffirmations = () => {
   const userData = localStorage.getItem("user");
   const userId = userData ? JSON.parse(userData).uid : null;
+
+  const favoriteAffirmations = useSelector(
+    (state: RootState) => state.favoriteAffirmations.favoriteAffirmations
+  );
+
+  const dispatch = useDispatch();
 
   const handleUnfavorite = async (affirmationId: string) => {
     if (!userId) return;
@@ -30,7 +37,7 @@ const AllFavoriteAffirmations = ({
       });
 
       const newFavorites = favoriteAffirmations.filter((fav) => fav.id !== affirmationId);
-      setFavoriteAffirmations(newFavorites);
+      dispatch(setFavoriteAffirmations(newFavorites));
       localStorage.setItem("favoriteAffirmations", JSON.stringify(newFavorites));
     } catch (err) {
       console.error("Error removing from favorites:", err);

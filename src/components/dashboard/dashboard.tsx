@@ -9,11 +9,15 @@ import "./dashboard.css";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
+import { useDispatch } from "react-redux";
+import { setFavoriteAffirmations } from "../../state/favoriteAffirmations/favoriteAffirmationsSlice";
+import { useSelector } from "react-redux";
+import { RootState } from "../../state/store";
 
-interface User {
-  displayName: string;
-  uid: string;
-}
+// interface User {
+//   displayName: string;
+//   uid: string;
+// }
 interface JournalEntry {
   title: string;
   entry: string;
@@ -22,23 +26,26 @@ interface JournalEntry {
 }
 
 interface DashboardProps {
-  user: User;
+  // user: User;
   journalEntries: JournalEntry[];
   setJournalEntries: (journalEntries: JournalEntry[]) => void;
-  streak: number;
   calculateStreak: (dates: Date[]) => number;
-  setStreak: (streak: number) => void;
-  favoriteAffirmations: { id: string; affirmation: string }[];
-  setFavoriteAffirmations: (affirmations: { id: string; affirmation: string }[]) => void;
+  // setStreak: (streak: number) => void;
+  // favoriteAffirmations: { id: string; affirmation: string }[];
+  // setFavoriteAffirmations: (affirmations: { id: string; affirmation: string }[]) => void;
 }
 
-const Dashboard = ({ user, journalEntries, setJournalEntries, streak, calculateStreak, setStreak, favoriteAffirmations,
-  setFavoriteAffirmations }: DashboardProps) => {
+const Dashboard = ({ journalEntries, setJournalEntries, calculateStreak,
+}: DashboardProps) => {
   const [isTyping, setIsTyping] = useState(false);
+  const user = useSelector((state: RootState) => state.user);
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const stored = JSON.parse(localStorage.getItem("favoriteAffirmations") || "[]");
-    setFavoriteAffirmations(stored);
+    dispatch(setFavoriteAffirmations(stored));
+    // setFavoriteAffirmations(stored);
   }, []);
 
   useEffect(() => {
@@ -63,25 +70,27 @@ const Dashboard = ({ user, journalEntries, setJournalEntries, streak, calculateS
           <div className="row-span-1 col-span-2">
             <Card className="p-4 border-none h-full w-full rounded-[35px]">
               <DailyAffirmation
-                favoriteAffirmations={favoriteAffirmations}
-                setFavoriteAffirmations={setFavoriteAffirmations}
+              // favoriteAffirmations={favoriteAffirmations}
+              // setFavoriteAffirmations={setFavoriteAffirmations}
               />
             </Card>
           </div>
 
           <div className="row-span-1 col-span-1">
             <Card className="p-2 md:p-4 basis-1/2 border-none h-full w-full rounded-[35px]">
-              <JournalStreak streak={streak} />
+              <JournalStreak
+              // streak={streak} 
+              />
             </Card>
           </div>
 
           <div className="hidden md:block row-span-2 col-span-1">
             <Card className="p-2 basis-1/2 border-none h-full w-full rounded-[35px]">
               <JournalEntryForm
-                user={user}
+                // user={user}
                 journalEntries={journalEntries}
                 setJournalEntries={setJournalEntries}
-                setStreak={setStreak}
+                // setStreak={setStreak}
                 calculateStreak={calculateStreak} />
             </Card>
           </div>
@@ -106,7 +115,7 @@ const Dashboard = ({ user, journalEntries, setJournalEntries, streak, calculateS
           <div className="row-span-2 col-span-2 md:row-span-2 md:col-span-1">
             <Card className="p-2 md:p-4 basis-1/2 border-none h-full w-full rounded-[35px]">
               <FavoriteAffirmations
-                favoriteAffirmations={favoriteAffirmations}
+              // favoriteAffirmations={favoriteAffirmations}
               />
             </Card>
           </div>
@@ -130,13 +139,13 @@ const Dashboard = ({ user, journalEntries, setJournalEntries, streak, calculateS
                   </Button>
                 </div>
                 <JournalEntryForm
-                  user={user}
+                  // user={user}
                   journalEntries={journalEntries}
                   setJournalEntries={(entries) => {
                     setJournalEntries(entries);
                     setIsTyping(false);
                   }}
-                  setStreak={setStreak}
+                  // setStreak={setStreak}
                   calculateStreak={calculateStreak}
                 />
               </Card>

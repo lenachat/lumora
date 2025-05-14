@@ -3,15 +3,22 @@ import { db } from "../../firebase";
 import { doc, updateDoc, arrayUnion, arrayRemove } from "firebase/firestore";
 import { v4 as uuidv4 } from "uuid";
 import { Button } from "../ui/button";
+import { useDispatch } from "react-redux";
+import { setFavoriteAffirmations } from "../../state/favoriteAffirmations/favoriteAffirmationsSlice";
 
-interface DailyAffirmationProps {
-  favoriteAffirmations: { id: string; affirmation: string }[];
-  setFavoriteAffirmations: (favs: { id: string; affirmation: string }[]) => void;
-}
 
-const DailyAffirmation = ({ favoriteAffirmations, setFavoriteAffirmations }: DailyAffirmationProps) => {
+// interface DailyAffirmationProps {
+//   favoriteAffirmations: { id: string; affirmation: string }[];
+//   setFavoriteAffirmations: (favs: { id: string; affirmation: string }[]) => void;
+// }
+
+const DailyAffirmation = () => {
   const [affirmation, setAffirmation] = useState<string>("");
   const [isFavorite, setIsFavorite] = useState<boolean>(false);
+
+  const favoriteAffirmations = JSON.parse(localStorage.getItem("favoriteAffirmations") || "[]");
+
+  const dispatch = useDispatch();
 
   const userData = localStorage.getItem("user");
   const userId = userData ? JSON.parse(userData).uid : null;
@@ -49,7 +56,7 @@ const DailyAffirmation = ({ favoriteAffirmations, setFavoriteAffirmations }: Dai
 
   // Check if affirmation is favorite
   useEffect(() => {
-    const isFav = favoriteAffirmations.some(fav => fav.affirmation === affirmation);
+    const isFav = favoriteAffirmations.some((fav: { affirmation: string; }) => fav.affirmation === affirmation);
     setIsFavorite(isFav);
   }, [affirmation, favoriteAffirmations]);
 
@@ -62,7 +69,7 @@ const DailyAffirmation = ({ favoriteAffirmations, setFavoriteAffirmations }: Dai
 
     try {
       if (isFavorite) {
-        const toRemove = favoriteAffirmations.find(fav => fav.affirmation === affirmation);
+        const toRemove = favoriteAffirmations.find((fav: { affirmation: string; }) => fav.affirmation === affirmation);
         if (!toRemove) return;
 
         await updateDoc(userDocRef, {
@@ -70,7 +77,7 @@ const DailyAffirmation = ({ favoriteAffirmations, setFavoriteAffirmations }: Dai
         });
 
         const newFavorites = updatedFavorites.filter(fav => fav.affirmation !== affirmation);
-        setFavoriteAffirmations(newFavorites);
+        dispatch(setFavoriteAffirmations(newFavorites));
         localStorage.setItem("favoriteAffirmations", JSON.stringify(newFavorites));
         setIsFavorite(false);
       } else {
@@ -81,7 +88,7 @@ const DailyAffirmation = ({ favoriteAffirmations, setFavoriteAffirmations }: Dai
         });
 
         const newFavorites = [...updatedFavorites, newFavorite];
-        setFavoriteAffirmations(newFavorites);
+        dispatch(setFavoriteAffirmations(newFavorites));
         localStorage.setItem("favoriteAffirmations", JSON.stringify(newFavorites));
         setIsFavorite(true);
       }
@@ -98,7 +105,7 @@ const DailyAffirmation = ({ favoriteAffirmations, setFavoriteAffirmations }: Dai
       </div>
       <div className="flex justify-end m-2 h-8">
         <Button onClick={toggleFavorite} className="border-none hover:bg-base">
-          {isFavorite ? <img src="/heart-filled.svg" className="w-6 h-6" /> : <img src="/heart.svg" className="w-6 h-6"/>}
+          {isFavorite ? <img src="/heart-filled.svg" className="w-6 h-6" /> : <img src="/heart.svg" className="w-6 h-6" />}
         </Button>
       </div>
     </>

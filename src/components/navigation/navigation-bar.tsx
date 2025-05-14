@@ -5,15 +5,25 @@ import {
 } from "@/components/ui/navigation-menu";
 import { Link, useLocation } from 'react-router-dom';
 import { Button } from "../ui/button";
+import { useSelector } from "react-redux";
+import { RootState } from "../../state/store";
+import { logout } from "@/state/user/userSlice";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const Navigation = () => {
-  const user = localStorage.getItem('user');
+  const user = useSelector((state: RootState) => state.user);
+  // const user = localStorage.getItem('user');
   const location = useLocation();
+  const navigate = useNavigate();
+
+  const dispatch = useDispatch();
 
   const handleLogout = () => {
+    dispatch(logout());
     localStorage.removeItem('user');
     localStorage.removeItem('favoriteAffirmations');
-    window.location.reload();
+    navigate('/login');
   }
 
   return (

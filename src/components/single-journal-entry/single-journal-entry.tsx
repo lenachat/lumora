@@ -15,11 +15,13 @@ import {
   DialogFooter,
   DialogClose,
 } from "@/components/ui/dialog";
+import { useSelector } from 'react-redux';
+import { RootState } from '../../state/store';
 
-interface User {
-  displayName: string;
-  uid: string;
-}
+// interface User {
+//   displayName: string;
+//   uid: string;
+// }
 
 interface JournalEntry {
   title: string;
@@ -30,15 +32,17 @@ interface JournalEntry {
 
 interface SingleJournalEntryProps {
   journalEntries: JournalEntry[];
-  user: User;
+  // user: User;
   setJournalEntries: (journalEntries: JournalEntry[]) => void;
 }
 
-const SingleJournalEntry = ({ user, journalEntries, setJournalEntries }: SingleJournalEntryProps) => {
+const SingleJournalEntry = ({ journalEntries, setJournalEntries }: SingleJournalEntryProps) => {
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [dialogMessage, setDialogMessage] = useState("");
   const [shouldNavigate, setShouldNavigate] = useState(false);
+
+  const user = useSelector((state: RootState) => state.user);
 
   const showDialog = (message: string) => {
     setDialogMessage(message);
@@ -61,23 +65,30 @@ const SingleJournalEntry = ({ user, journalEntries, setJournalEntries }: SingleJ
     const updatedJournalEntries = [...journalEntries]
     updatedJournalEntries.splice(entryIndex, 1);
 
-    // Get the Firestore document reference
-    const userDocRef = doc(db, 'users', user.uid);
+    // Check if the user is logged in
+    if (!user) {
+      showDialog("Please log in to delete a journal entry.");
+      return;
+    }
+    if (user.uid) {
+      // Get the Firestore document reference
+      const userDocRef = doc(db, 'users', user.uid);
 
-    try {
-      // Update the Firestore document // Sort by created date in descending order
-      await updateDoc(userDocRef, {
-        journalEntries: updatedJournalEntries.sort(
-          (a, b) => new Date(b.created).getTime() - new Date(a.created).getTime()
-        )
-      });
-      // navigate(`/journalEntries`);
-      setJournalEntries(updatedJournalEntries); // Update the local state
-      setShouldNavigate(true);
-      showDialog("Journal entry deleted successfully!");
-    } catch (error) {
-      showDialog("Error deleting journal entry. Please check your connection and try again.");
-      console.error("Error deleting journal entry:", error);
+      try {
+        // Update the Firestore document // Sort by created date in descending order
+        await updateDoc(userDocRef, {
+          journalEntries: updatedJournalEntries.sort(
+            (a, b) => new Date(b.created).getTime() - new Date(a.created).getTime()
+          )
+        });
+        // navigate(`/journalEntries`);
+        setJournalEntries(updatedJournalEntries); // Update the local state
+        setShouldNavigate(true);
+        showDialog("Journal entry deleted successfully!");
+      } catch (error) {
+        showDialog("Error deleting journal entry. Please check your connection and try again.");
+        console.error("Error deleting journal entry:", error);
+      }
     }
   };
 

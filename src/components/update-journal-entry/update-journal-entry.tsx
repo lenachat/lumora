@@ -18,6 +18,8 @@ import {
   DialogFooter,
   DialogClose,
 } from "@/components/ui/dialog";
+import { useSelector } from "react-redux";
+import { RootState } from "../../state/store";
 
 interface JournalEntry {
   title: string;
@@ -28,14 +30,19 @@ interface JournalEntry {
 
 interface UpdateJournalEntryProps {
   journalEntries: JournalEntry[];
-  userId: string;
+  // userId: string;
   setJournalEntries: (journalEntries: JournalEntry[]) => void;
 }
 
-const UpdateJournalEntry = ({ journalEntries, userId, setJournalEntries }: UpdateJournalEntryProps) => {
+const UpdateJournalEntry = ({ journalEntries, setJournalEntries }: UpdateJournalEntryProps) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [dialogMessage, setDialogMessage] = useState("");
   const [shouldNavigate, setShouldNavigate] = useState(false);
+
+  const user = useSelector((state: RootState) => state.user);
+  const userId = user.uid;
+
+  // const userId = useSelector((state: RootState) => state.user.uid);
 
   const showDialog = (message: string) => {
     setDialogMessage(message);
@@ -71,22 +78,27 @@ const UpdateJournalEntry = ({ journalEntries, userId, setJournalEntries }: Updat
       updated: new Date(),
     };
 
-    const userDocRef = doc(db, "users", userId);
+    if (user?.uid) {
+      if (!userId) {
+        showDialog("Error: User ID is missing. Please log in again.");
+        return;
+      }
+      const userDocRef = doc(db, "users", userId);
+      try {
+        const updatedJournalEntries = journalEntries.map((entry, idx) =>
+          idx === entryIndex ? updatedEntryData : entry
+        );
 
-    try {
-      const updatedJournalEntries = journalEntries.map((entry, idx) =>
-        idx === entryIndex ? updatedEntryData : entry
-      );
-
-      // Update the Firestore document // Sort by created date in descending order
-      await updateDoc(userDocRef, { journalEntries: updatedJournalEntries.sort((a, b) => new Date(b.created).getTime() - new Date(a.created).getTime()) });
-      // Update local state
-      setJournalEntries([...updatedJournalEntries]);
-      setShouldNavigate(true);
-      showDialog("Journal entry updated successfully!");
-    } catch (error) {
-      showDialog("Error updating journal entry. Please check your connection and try again.");
-      console.error("Error updating journal entry:", error);
+        // Update the Firestore document // Sort by created date in descending order
+        await updateDoc(userDocRef, { journalEntries: updatedJournalEntries.sort((a, b) => new Date(b.created).getTime() - new Date(a.created).getTime()) });
+        // Update local state
+        setJournalEntries([...updatedJournalEntries]);
+        setShouldNavigate(true);
+        showDialog("Journal entry updated successfully!");
+      } catch (error) {
+        showDialog("Error updating journal entry. Please check your connection and try again.");
+        console.error("Error updating journal entry:", error);
+      }
     }
   };
 

@@ -1,10 +1,12 @@
+import { useSelector } from 'react-redux';
+import { RootState } from '../../state/store';
 
+// interface JournalStreakProps {
+//   streak: number;
+// }
 
-interface JournalStreakProps {
-  streak: number;
-}
-
-const JournalStreak = ({ streak }: JournalStreakProps) => {
+const JournalStreak = () => {
+  const streak = useSelector((state: RootState) => state.streak.streak);
 
   return (
     <div>

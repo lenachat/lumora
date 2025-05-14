@@ -15,9 +15,13 @@ import {
   DialogFooter,
   DialogClose,
 } from "@/components/ui/dialog";
+import { useDispatch } from "react-redux";
+import { setUser } from "../../state/user/userSlice";
+import { logout } from "../../state/user/userSlice";
 
 
 const ProfileView = () => {
+  const dispatch = useDispatch();
 
   const auth = getAuth();
   const user = auth.currentUser;
@@ -90,6 +94,9 @@ const ProfileView = () => {
         };
         localStorage.setItem("user", JSON.stringify(updatedUserData));
 
+        // Redux store update
+        dispatch(setUser(updatedUserData));
+
         showDialog("Profile updated successfully!");
       } catch (error: unknown) {
         if (error instanceof Error) {
@@ -118,10 +125,10 @@ const ProfileView = () => {
 
       // Delete user from Firebase Auth
       await user.delete();
-
       showDialog("Your account has been deleted successfully.");
       localStorage.removeItem("user");
       localStorage.removeItem("favoriteAffirmations");
+      dispatch(logout()); // Clear user data from Redux store
       // Redirect to login or home page
       window.location.href = "/";
     } catch (error: unknown) {
@@ -207,7 +214,7 @@ const ProfileView = () => {
                     />
                   </>
                 )}
-                <Button type="submit">Save Changes</Button>
+                <Button type="submit" className="mt-2">Save Changes</Button>
               </form>
             </CardContent>
 
@@ -221,7 +228,7 @@ const ProfileView = () => {
                 onChange={(e) => setCurrentPassword(e.target.value)}
                 placeholder="Enter password"
                 required
-                className="text-primary border-none md:w-1/2"
+                className="text-primary border-none md:w-1/2 mt-2"
               />
               <div className="mt-4">
                 <Button onClick={() => setIsDeleteDialogOpen(true)} className="border-warning hover:bg-warning">
