@@ -1,9 +1,9 @@
 import Navigation from "../navigation/navigation-bar";
 import JournalEntryForm from "../journal-entry-form/journal-entry-form";
-import DailyAffirmation from "../daily-affirmations/daily-affirmations";
+import DailyAffirmation from "../daily-affirmation-view/daily-affirmation-view";
 import JournalEntriesView from "../journal-entries-view/journal-entries-view";
-import JournalStreak from "../streak/streak";
-import FavoriteAffirmations from "../favorite-affirmations/favorite-affirmations";
+import JournalStreak from "../streak-view/streak-view";
+import FavoriteAffirmations from "../favorite-affirmations-view/favorite-affirmations-view";
 import { Card } from "../ui/card";
 import "./dashboard.css";
 import { Link } from "react-router-dom";
