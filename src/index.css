@@ -3,21 +3,6 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-/* 
-:root {
-  
-  --background: 45 100% 98%;    /* #fffcf4 */
-  /* --base: 202 21% 87%;     #cadbc7 */
- /* - --light: 92 13% 41%;    /* #6a7a5a */
- /* - --primary: 88 15% 30%;     /* #4c5741 */
- /* - --dark: 90 9% 21%;       /* #373d31 */
-
- /* - --warning: #cd3c31; /* #cd3c31 */
- /* - --edit: #5e909f;   /* #5e909f */
-
- /* - --foreground: var(--dark);
-  --primary-foreground: var(--light);
-} */
 
 body {
   @apply font-sans;
