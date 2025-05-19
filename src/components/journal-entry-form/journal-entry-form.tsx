@@ -16,32 +16,19 @@ import { useDispatch } from 'react-redux';
 import { setStreak } from '../../state/streak/streakSlice';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../state/store';
-
-// interface User {
-//   displayName: string;
-//   uid: string;
-// }
-
-interface JournalEntry {
-  title: string;
-  entry: string;
-  created: Date;
-  updated: Date;
-}
+import { setJournalEntries } from '../../state/journalEntries/journalEntriesSlice';
 
 interface JournalEntryFormProps {
-  // user: User;
-  journalEntries: JournalEntry[];
-  setJournalEntries: (entries: JournalEntry[]) => void;
-  // setStreak: (streak: number) => void;
   calculateStreak: (dates: Date[]) => number;
 }
 
 const JournalEntryForm = (
-  { journalEntries, setJournalEntries, calculateStreak }: JournalEntryFormProps) => {
+  { calculateStreak }: JournalEntryFormProps) => {
   const dispatch = useDispatch();
 
   const user = useSelector((state: RootState) => state.user);
+
+  const journalEntries = useSelector((state: RootState) => state.journalEntries.journalEntries);
 
   const [journalTitle, setJournalTitle] = useState<string>('');
   const [journalEntry, setJournalEntry] = useState<string>('');
@@ -58,28 +45,30 @@ const JournalEntryForm = (
     e.preventDefault();
     const newEntry = {
       title: journalTitle,
-      created: new Date(),
+      created: new Date().toISOString(),
       entry: journalEntry,
-      updated: new Date(),
+      updated: new Date().toISOString(),
     };
     try {
-      // Check if the user is logged in
       if (user?.uid) {
         const userDocRef = doc(db, "users", user.uid);
         await updateDoc(userDocRef, {
           journalEntries: arrayUnion(newEntry),
         });
 
-        // Update the local state with the new entry
-        const updatedEntries = [...journalEntries, newEntry];
-        setJournalEntries(updatedEntries);
+        const updatedEntries = [...journalEntries,
+        {
+          ...newEntry,
+          created: newEntry.created,
+          updated: newEntry.updated,
+        }];
+        dispatch(setJournalEntries(updatedEntries));
         setJournalEntry('');
         setJournalTitle('');
-        // Update the streak count
+        //Update streak count
         const createdDates = updatedEntries.map(entry => new Date(entry.created));
         const streakCount = calculateStreak(createdDates);
         dispatch(setStreak(streakCount));
-        // setStreak(streakCount); // update the state from parent
         showDialog("Journal entry saved successfully! Keep it up :)");
       } else {
         showDialog("Please log in to save a journal entry.");

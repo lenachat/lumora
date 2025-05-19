@@ -71,7 +71,7 @@ const AllFavoriteAffirmations = () => {
             <Card
               key={affirmation.id}
               className="p-4 mb-4 md:mb-6 rounded-[25px] mt-4 w-10/12 md:w-1/2 mx-auto border-none relative">
-              <p className="line-clamp-3 ml-3 mr-3 mb-2">{affirmation.affirmation}</p>
+              <p className="line-clamp-3 ml-3 mr-3 mb-2 mt-4">{affirmation.affirmation}</p>
               <div className="flex justify-end">
                 <Button
                   onClick={() => handleUnfavorite(affirmation.id)}

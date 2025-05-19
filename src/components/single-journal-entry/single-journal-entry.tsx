@@ -17,32 +17,18 @@ import {
 } from "@/components/ui/dialog";
 import { useSelector } from 'react-redux';
 import { RootState } from '../../state/store';
+import { useDispatch } from 'react-redux';
+import { setJournalEntries } from '../../state/journalEntries/journalEntriesSlice';
 
-// interface User {
-//   displayName: string;
-//   uid: string;
-// }
-
-interface JournalEntry {
-  title: string;
-  entry: string;
-  created: Date;
-  updated: Date;
-}
-
-interface SingleJournalEntryProps {
-  journalEntries: JournalEntry[];
-  // user: User;
-  setJournalEntries: (journalEntries: JournalEntry[]) => void;
-}
-
-const SingleJournalEntry = ({ journalEntries, setJournalEntries }: SingleJournalEntryProps) => {
+const SingleJournalEntry = () => {
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [dialogMessage, setDialogMessage] = useState("");
   const [shouldNavigate, setShouldNavigate] = useState(false);
 
   const user = useSelector((state: RootState) => state.user);
+  const journalEntries = useSelector((state: RootState) => state.journalEntries.journalEntries);
+  const dispatch = useDispatch();
 
   const showDialog = (message: string) => {
     setDialogMessage(message);
@@ -61,28 +47,24 @@ const SingleJournalEntry = ({ journalEntries, setJournalEntries }: SingleJournal
   }
 
   const handleDeleteEntry = async () => {
-    // Filter out the selected journal entry
     const updatedJournalEntries = [...journalEntries]
     updatedJournalEntries.splice(entryIndex, 1);
 
-    // Check if the user is logged in
     if (!user) {
       showDialog("Please log in to delete a journal entry.");
       return;
     }
     if (user.uid) {
-      // Get the Firestore document reference
       const userDocRef = doc(db, 'users', user.uid);
 
       try {
-        // Update the Firestore document // Sort by created date in descending order
+        // Sort by created date in descending order
         await updateDoc(userDocRef, {
           journalEntries: updatedJournalEntries.sort(
             (a, b) => new Date(b.created).getTime() - new Date(a.created).getTime()
           )
         });
-        // navigate(`/journalEntries`);
-        setJournalEntries(updatedJournalEntries); // Update the local state
+        dispatch(setJournalEntries(updatedJournalEntries));
         setShouldNavigate(true);
         showDialog("Journal entry deleted successfully!");
       } catch (error) {
@@ -116,10 +98,10 @@ const SingleJournalEntry = ({ journalEntries, setJournalEntries }: SingleJournal
           <Card className="p-4 mb-6 mt-4 w-10/12 md:w-1/2 mx-auto border-none rounded-[25px]">
             <div className="md:flex md:justify-between">
               <p className='text-left text-light text-sm font-thin ml-3 mr-3'>
-                {entry.created.toLocaleDateString()}
+                {new Date(entry.created).toLocaleDateString()}
               </p>
               <p className='md:text-right text-light text-sm font-thin ml-3 mr-3'>
-                Last Updated: {entry.updated.toLocaleDateString()}
+                Last Updated: {new Date(entry.updated).toLocaleDateString()}
               </p>
             </div>
             <h3 className='text-xl mt-1 mb-2 ml-3 mr-3'>{entry.title}</h3>

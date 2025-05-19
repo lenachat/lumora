@@ -2,19 +2,22 @@ import { Card } from '../ui/card';
 import { Button } from '../ui/button';
 import { Link } from 'react-router-dom';
 import Navigation from '../navigation/navigation-bar';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../state/store';
 
-interface JournalEntries {
-  title: string;
-  entry: string;
-  created: Date;
-  updated: Date;
-}
+// interface JournalEntries {
+//   title: string;
+//   entry: string;
+//   created: Date;
+//   updated: Date;
+// }
 
-interface JournalEntriesList {
-  journalEntries: JournalEntries[];
-}
+// interface JournalEntriesList {
+//   journalEntries: JournalEntries[];
+// }
 
-const AllJournalEntries = ({ journalEntries }: JournalEntriesList) => {
+const AllJournalEntries = () => {
+  const journalEntries = useSelector((state: RootState) => state.journalEntries.journalEntries);
   return (
     <>
       <div className="flex flex-col md:ml-8 md:mr-8">
@@ -44,10 +47,10 @@ const AllJournalEntries = ({ journalEntries }: JournalEntriesList) => {
                   <Link to={`/journalEntries/${index}`}>
                     <div className="md:flex md:justify-between">
                       <p className='text-left text-light text-sm font-thin ml-3 mr-3'>
-                        {entry.created.toLocaleDateString()}
+                        {new Date(entry.created).toLocaleDateString()}
                       </p>
                       <p className='md:text-right text-light text-sm font-thin ml-3 mr-3'>
-                        Last Updated: {entry.updated.toLocaleDateString()}
+                        Last Updated: {new Date(entry.updated).toLocaleDateString()}
                       </p>
                     </div>
                     <h3 className='text-xl mt-1 mb-2 ml-3 mr-3'>{entry.title}</h3>

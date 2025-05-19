@@ -14,39 +14,20 @@ import { setFavoriteAffirmations } from "../../state/favoriteAffirmations/favori
 import { useSelector } from "react-redux";
 import { RootState } from "../../state/store";
 
-// interface User {
-//   displayName: string;
-//   uid: string;
-// }
-interface JournalEntry {
-  title: string;
-  entry: string;
-  created: Date;
-  updated: Date;
-}
-
 interface DashboardProps {
-  // user: User;
-  journalEntries: JournalEntry[];
-  setJournalEntries: (journalEntries: JournalEntry[]) => void;
   calculateStreak: (dates: Date[]) => number;
-  // setStreak: (streak: number) => void;
-  // favoriteAffirmations: { id: string; affirmation: string }[];
-  // setFavoriteAffirmations: (affirmations: { id: string; affirmation: string }[]) => void;
 }
 
-const Dashboard = ({ journalEntries, setJournalEntries, calculateStreak,
+const Dashboard = ({ calculateStreak,
 }: DashboardProps) => {
   const [isTyping, setIsTyping] = useState(false);
   const user = useSelector((state: RootState) => state.user);
-
   const dispatch = useDispatch();
 
   useEffect(() => {
     const stored = JSON.parse(localStorage.getItem("favoriteAffirmations") || "[]");
     dispatch(setFavoriteAffirmations(stored));
-    // setFavoriteAffirmations(stored);
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     if (isTyping) {
@@ -69,28 +50,19 @@ const Dashboard = ({ journalEntries, setJournalEntries, calculateStreak,
         <div className="md:m-4 grid grid-rows-5 grid-cols-2 gap-3 md:gap-6 w-full max-w-7xl grow">
           <div className="row-span-1 col-span-2">
             <Card className="p-4 border-none h-full w-full rounded-[35px]">
-              <DailyAffirmation
-              // favoriteAffirmations={favoriteAffirmations}
-              // setFavoriteAffirmations={setFavoriteAffirmations}
-              />
+              <DailyAffirmation />
             </Card>
           </div>
 
           <div className="row-span-1 col-span-1">
             <Card className="p-2 md:p-4 basis-1/2 border-none h-full w-full rounded-[35px]">
-              <JournalStreak
-              // streak={streak} 
-              />
+              <JournalStreak />
             </Card>
           </div>
 
           <div className="hidden md:block row-span-2 col-span-1">
             <Card className="p-2 basis-1/2 border-none h-full w-full rounded-[35px]">
               <JournalEntryForm
-                // user={user}
-                journalEntries={journalEntries}
-                setJournalEntries={setJournalEntries}
-                // setStreak={setStreak}
                 calculateStreak={calculateStreak} />
             </Card>
           </div>
@@ -107,45 +79,31 @@ const Dashboard = ({ journalEntries, setJournalEntries, calculateStreak,
           <div className="row-span-3 col-span-2 md:row-span-3 md:col-span-1">
             <Link to="/journalEntries">
               <Card className="p-2 md:p-4 basis-1/2 border-none h-full w-full rounded-[35px]">
-                <JournalEntriesView journalEntries={journalEntries} />
+                <JournalEntriesView />
               </Card>
             </Link>
           </div>
 
           <div className="row-span-2 col-span-2 md:row-span-2 md:col-span-1">
             <Card className="p-2 md:p-4 basis-1/2 border-none h-full w-full rounded-[35px]">
-              <FavoriteAffirmations
-              // favoriteAffirmations={favoriteAffirmations}
-              />
+              <FavoriteAffirmations />
             </Card>
           </div>
-
         </div>
 
         {isTyping && (
           <div
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm transition-opacity duration-300 ease-in-out"
-          >
-            <div
-              className="animate-fade-in-up w-full max-w-3xl p-6"
-            >
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm transition-opacity duration-300 ease-in-out">
+            <div className="animate-fade-in-up w-full max-w-3xl p-6">
               <Card className="rounded-[35px] shadow-lg transition-transform duration-300 ease-in-out transform scale-95">
                 <div className="flex justify-end mt-4">
                   <Button
                     onClick={() => setIsTyping(false)}
-                    className="text-sm text-gray-500 hover:text-primary transition mr-3 border-none"
-                  >
+                    className="text-sm text-gray-500 hover:text-primary transition mr-3 border-none">
                     X
                   </Button>
                 </div>
                 <JournalEntryForm
-                  // user={user}
-                  journalEntries={journalEntries}
-                  setJournalEntries={(entries) => {
-                    setJournalEntries(entries);
-                    setIsTyping(false);
-                  }}
-                  // setStreak={setStreak}
                   calculateStreak={calculateStreak}
                 />
               </Card>

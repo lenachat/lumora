@@ -20,29 +20,18 @@ import {
 } from "@/components/ui/dialog";
 import { useSelector } from "react-redux";
 import { RootState } from "../../state/store";
+import { useDispatch } from "react-redux";
+import { setJournalEntries } from "../../state/journalEntries/journalEntriesSlice";
 
-interface JournalEntry {
-  title: string;
-  entry: string;
-  created: Date;
-  updated: Date;
-}
-
-interface UpdateJournalEntryProps {
-  journalEntries: JournalEntry[];
-  // userId: string;
-  setJournalEntries: (journalEntries: JournalEntry[]) => void;
-}
-
-const UpdateJournalEntry = ({ journalEntries, setJournalEntries }: UpdateJournalEntryProps) => {
+const UpdateJournalEntry = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [dialogMessage, setDialogMessage] = useState("");
   const [shouldNavigate, setShouldNavigate] = useState(false);
 
+  const dispatch = useDispatch();
+  const journalEntries = useSelector((state: RootState) => state.journalEntries.journalEntries);
   const user = useSelector((state: RootState) => state.user);
   const userId = user.uid;
-
-  // const userId = useSelector((state: RootState) => state.user.uid);
 
   const showDialog = (message: string) => {
     setDialogMessage(message);
@@ -60,7 +49,6 @@ const UpdateJournalEntry = ({ journalEntries, setJournalEntries }: UpdateJournal
   const [updatedEntry, setUpdatedEntry] = useState<string>(entryToEdit?.entry || '');
 
   useEffect(() => {
-    // When the entry changes, update the state with the selected entry
     if (entryToEdit) {
       setUpdatedEntry(entryToEdit.entry);
       setUpdatedTitle(entryToEdit.title);
@@ -70,12 +58,11 @@ const UpdateJournalEntry = ({ journalEntries, setJournalEntries }: UpdateJournal
   const handleUpdateEntry = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Update the 'last updated' timestamp
     const updatedEntryData = {
       ...entryToEdit,
       title: updatedTitle,
       entry: updatedEntry,
-      updated: new Date(),
+      updated: new Date().toISOString(),
     };
 
     if (user?.uid) {
@@ -89,10 +76,8 @@ const UpdateJournalEntry = ({ journalEntries, setJournalEntries }: UpdateJournal
           idx === entryIndex ? updatedEntryData : entry
         );
 
-        // Update the Firestore document // Sort by created date in descending order
         await updateDoc(userDocRef, { journalEntries: updatedJournalEntries.sort((a, b) => new Date(b.created).getTime() - new Date(a.created).getTime()) });
-        // Update local state
-        setJournalEntries([...updatedJournalEntries]);
+        dispatch(setJournalEntries([...updatedJournalEntries]));
         setShouldNavigate(true);
         showDialog("Journal entry updated successfully!");
       } catch (error) {
